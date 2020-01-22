@@ -26,6 +26,7 @@ namespace MtmParkingLot {
         ~Vehicle() = default;
         Vehicle(const Vehicle& other) = default;
         Vehicle& operator=(const Vehicle&) = delete;
+        VehicleType getType() const;
 
         //other functs: getLicensePlate, >=, checkIfOvertime, more?
 
@@ -41,7 +42,9 @@ namespace MtmParkingLot {
         license_plate(plate_number), vehicle_type(type), time_of_entrance(time), is_overtime(false) {
     }
 
-
+    VehicleType Vehicle:: getType() const {
+        return this->vehicle_type;
+    }
 
 
 
@@ -74,16 +77,38 @@ namespace MtmParkingLot {
 
     ParkingLot:: ParkingLot(unsigned int parkingBlockSizes[]) {
         // create an array for each vehicle type
-        this->motorbikes_arr = UniqueArray(parkingBlockSizes[0]);
-        this->handicapped_cars_arr = UniqueArray(parkingBlockSizes[1]);
-        this->cars_arr = UniqueArray(parkingBlockSizes[2]);
+        this->motorbikes_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[0]);
+        this->handicapped_cars_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[1]);
+        this->cars_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[2]);
 
         //expections
 
     }
 
-    ParkingResult ParkingLot:: getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const{
+    ParkingResult ParkingLot:: getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const {
+        Vehicle* vehicle_in_arr = ParkingLot::getVehicleFromLicensePlate(licensePlate);
+        if(vehicle_in_arr != NULL) {
+            // get parking block, get parking number, put it in parkingSpot
+            VehicleType vehicle_block = *vehicle_in_arr->getType();
+            unsigned int vehicle_number = -1;
+            if(vehicle_block == MOTORBIKE){
+                motorbikes_arr.getIndex(*vehicle_in_arr, vehicle_number)
+            }
+            if(vehicle_block == CAR){
+                cars_arr.getIndex(*vehicle_in_arr, vehicle_number)
+            }
+            if(vehicle_block == HANDICAPPED){
+                handicapped_cars_arr.getIndex(*vehicle_in_arr, vehicle_number)
+                if(vehicle_number == -1){
+                    cars_arr.getIndex(*vehicle_in_arr, vehicle_number)
+                }
+            }
 
+            ParkingSpot temp_parking_spot(vehicle_block, vehicle_number);
+            parkingSpot = temp_parking_spot;
+            return SUCCESS:
+        }
+        return VEHICLE_NOT_FOUND;
     }
 
 
