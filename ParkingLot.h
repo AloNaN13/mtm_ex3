@@ -26,7 +26,7 @@ namespace MtmParkingLot {
         ~Vehicle() = default;
         Vehicle(const Vehicle& other) = default;
         Vehicle& operator=(const Vehicle&) = delete;
-        
+
         //other functs: getLicensePlate, >=, checkIfOvertime, more?
 
         friend bool operator==(const Vehicle&, const Vehicle&);
@@ -79,6 +79,10 @@ namespace MtmParkingLot {
         this->cars_arr = UniqueArray<Vehicle, Compare>(parkingBlockSizes[2]);
 
         //expections
+
+    }
+
+    ParkingResult ParkingLot:: getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const{
 
     }
 
