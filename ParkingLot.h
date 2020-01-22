@@ -21,6 +21,7 @@ namespace MtmParkingLot {
         Time time_of_entrance;
         bool is_overtime;
     public:
+        Vehicle(LicensePlate plate_number);
         Vehicle(LicensePlate plate_number, VehicleType type, Time time);
         ~Vehicle() = default;
         Vehicle(const Vehicle& other) = default;
@@ -32,23 +33,14 @@ namespace MtmParkingLot {
 
     };
 
+    Vehicle:: Vehicle(LicensePlate plate_number) :
+        license_plate(plate_number), vehicle_type(FIRST), time_of_entrance(0, 0, 0), is_overtime(false) {
+    }
+
     Vehicle:: Vehicle(LicensePlate plate_number, VehicleType type, Time time) :
-            license_plate(plate_number), vehicle_type(type), time_of_entrance(time), is_overtime(false) {
+        license_plate(plate_number), vehicle_type(type), time_of_entrance(time), is_overtime(false) {
     }
 
-    Vehicle:: ~Vehicle() {
-        ~string(license_plate);
-        ~Time(time_of_entrance);
-    }
-// check the destructor for string
-
-// do we need this copy ctor?
-    Vehicle(const Vehicle& other_vehicle);
-    Vehicle:: Vehicle(const Vehicle& other) :
-            license_plate(other.license_plate), vehicle_type(other.vehicle_type), time_of_entrance(time), is_overtime(false) {
-        //copy str
-        //copy time
-    }
 
 
 
