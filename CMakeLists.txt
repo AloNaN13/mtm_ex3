@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
-project(ex3)
+project(mtm_ex3)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(.)
+#include_directories(.)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
 
 #add_executable(ex3 main.cpp UniqueArray.h tests)
@@ -11,7 +11,7 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
 
 
 
-add_executable(ex3
+add_executable(mtm_ex3
         tests/UniqueArrayTest.cpp
         #MtmParkingLot.cpp
         #ParkingLot.h
@@ -24,4 +24,4 @@ add_executable(ex3
         #TimeSARI.h
         UniqueArray.h
         UniqueArrayImp.h)
-        #Vehicle.h)
+#Vehicle.h)

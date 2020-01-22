@@ -40,7 +40,7 @@ unsigned int UniqueArray<Element,Compare>::  insert(const Element& element){
     if(getIndex(element,index)){
         return index;
     }
-    // element doesn't exicts in the UniqueArray
+    // element doesn't exists in the UniqueArray
     for(unsigned int i=0;i<max_size;i++){
         if(data[i]==NULL) {    //ask
             data[i]=new Element(element);
@@ -66,7 +66,7 @@ bool UniqueArray<Element,Compare>::getIndex(const Element& element, unsigned int
             }
         }
     }
-    //element doesn't exicts in the UniqueArray
+    //element doesn't exists in the UniqueArray
     return false;
 }
 
@@ -129,3 +129,7 @@ UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(const Filter&
 
 #endif //EX3_UNIQUEARRAYIMP_H
 
+
+
+
+// change settings in clion for templates
