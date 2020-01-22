@@ -11,6 +11,7 @@ namespace MtmParkingLot {
 
     using namespace ParkingLotUtils;
     using std::ostream;
+    using std::cout;
 
     // to put in vehicle.h
 
@@ -21,6 +22,7 @@ namespace MtmParkingLot {
         Time time_of_entrance;
         bool is_overtime;
     public:
+
         Vehicle(LicensePlate plate_number);
         Vehicle(LicensePlate plate_number, VehicleType type, Time time);
         ~Vehicle() = default;
@@ -50,9 +52,9 @@ namespace MtmParkingLot {
 
     class ParkingLot {
     private:
-        UniqueArray <Vehicle,Compare> motorbikes_arr;
-        UniqueArray <Vehicle,Compare> handicapped_cars_arr;
-        UniqueArray <Vehicle,Compare> cars_arr;
+        UniqueArray <Vehicle*,Compare> motorbikes_arr;
+        UniqueArray <Vehicle*,Compare> handicapped_cars_arr;
+        UniqueArray <Vehicle*,Compare> cars_arr;
 
     public:
         ParkingLot(unsigned int parkingBlockSizes[]);
@@ -75,7 +77,11 @@ namespace MtmParkingLot {
 
     };
 
-    ParkingLot:: ParkingLot(unsigned int parkingBlockSizes[]) {
+    ParkingLot:: ParkingLot(unsigned int parkingBlockSizes[]) :
+            motorbikes_arr ( UniqueArray<Vehicle*,Compare>(parkingBlockSizes[0])),
+            handicapped_cars_arr ( UniqueArray<Vehicle*,Compare>(parkingBlockSizes[1])),
+            cars_arr ( UniqueArray<Vehicle*,Compare>(parkingBlockSizes[2])){
+
         // create an array for each vehicle type
         this->motorbikes_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[0]);
         this->handicapped_cars_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[1]);
@@ -115,10 +121,10 @@ namespace MtmParkingLot {
 
 
 
-    //mimush:
+    
 
 
-    Vehicle* MtmParkingLot::ParkingLot::getVehicleFromLicensePlate(LicensePlate licensePlate){
+    Vehicle* ParkingLot::getVehicleFromLicensePlate(LicensePlate licensePlate){
         Vehicle new_vehicle(licensePlate);
         Vehicle* exists =motorbikes_arr[new_vehicle];
         if(exists!=NULL){
@@ -135,7 +141,7 @@ namespace MtmParkingLot {
 
 
 
-    bool MtmParkingLot::ParkingLot:: checkIfExistsSpot(VehicleType vehicleType){
+    bool ParkingLot:: checkIfExistsSpot(VehicleType vehicleType){
         if(vehicleType==MOTORBIKE){
             return motorbikes_arr.getCount() != motorbikes_arr.getSize();
         }
@@ -167,16 +173,16 @@ namespace MtmParkingLot {
         cars_arr.insert(register_vehicle);
     }
 
-    ParkingLotUtils:: ParkingResult MtmParkingLot::ParkingLot:: enterParking(VehicleType vehicleType,
+    ParkingLotUtils:: ParkingResult ParkingLot:: enterParking(VehicleType vehicleType,
                                                                              LicensePlate licensePlate, Time entranceTime){
-        Vehicle new_vehicle(vehicleType,licensePlate,entranceTime);
+        Vehicle new_vehicle(licensePlate,vehicleType,entranceTime);
         //getVehicleFromArray(motorbikes_arr,licensePlate);
 
         Vehicle* exists= getVehicleFromLicensePlate(licensePlate);
         ParkingSpot spot;
         if(exists!=NULL){
             getParkingSpot(licensePlate,spot);
-            printEntryFailureAlreadyParked(cout,spot);
+            ParkingLotPrinter::printEntryFailureAlreadyParked(cout,spot);
             return VEHICLE_ALREADY_PARKED;
         }
 
@@ -186,7 +192,8 @@ namespace MtmParkingLot {
             return NO_EMPTY_SPOT;
         }
         enterVehicleToParking(new_vehicle,vehicleType);
-        ParkingLotPrinter::printEntrySuccess(cout,new_vehicle);
+        getParkingSpot(licensePlate,spot);
+        ParkingLotPrinter::printEntrySuccess(cout,spot);
         return SUCCESS;
     }
 
