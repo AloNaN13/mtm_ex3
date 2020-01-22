@@ -29,6 +29,7 @@ namespace MtmParkingLot {
         Vehicle(const Vehicle& other) = default;
         Vehicle& operator=(const Vehicle&) = delete;
         VehicleType getType() const;
+        
 
         //other functs: getLicensePlate, >=, checkIfOvertime, more?
 
@@ -69,6 +70,7 @@ namespace MtmParkingLot {
         Vehicle* getVehicleFromLicensePlate(LicensePlate licensePlate);
         bool  checkIfExistsSpot(VehicleType vehicleType);
         void  enterVehicleToParking(Vehicle &register_vehicle, VehicleType vt);
+        int getPriceforVehicleAtExit(Vehicle& vehicle,Time exit_time);
 
 
 
@@ -83,9 +85,11 @@ namespace MtmParkingLot {
             cars_arr ( UniqueArray<Vehicle*,Compare>(parkingBlockSizes[2])){
 
         // create an array for each vehicle type
+        /*
         this->motorbikes_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[0]);
         this->handicapped_cars_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[1]);
         this->cars_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[2]);
+         */
 
         //expections
 
@@ -118,10 +122,6 @@ namespace MtmParkingLot {
     }
 
 
-
-
-
-    
 
 
     Vehicle* ParkingLot::getVehicleFromLicensePlate(LicensePlate licensePlate){
@@ -197,8 +197,54 @@ namespace MtmParkingLot {
         return SUCCESS;
     }
 
+
+
+    int getPriceforVehicleAtExit(Vehicle& vehicle,Time exit_time){
+        int price=0;
+        if(vehicle.getType()==HANDICAPPED){
+            price=15;
+        }
+        else{
+
+        }
+
+
+        if(vehicle.gotfined()){
+            price=price+250;
+
+        }
+        return price;
+    }
+
+
     ParkingLotUtils:: ParkingResult MtmParkingLot::ParkingLot::
     exitParking(LicensePlate licensePlate, Time exitTime){
+        Vehicle* exists= getVehicleFromLicensePlate(licensePlate);
+        if(exists==NULL){
+            ParkingLotPrinter::printExitFailure(cout,licensePlate);
+            return VEHICLE_NOT_FOUND;
+        }
+        //Move to outside function
+        if(exists->getType()==MOTORBIKE){
+            motorbikes_arr.remove(&exists);
+            //assert success
+        }
+        if(exists->getType()==CAR){
+            cars_arr.remove(&exists);
+        }
+        //value= Handicapped
+        int index;
+        if(handicapped_cars_arr.getIndex(&exists,index)){//the car is in handicapped
+            handicapped_cars_arr.remove(&exists);
+        }
+        //vechile is in the car
+        cars_arr.remove(&exists);
+        //get the price
+
+
+        ParkingLotPrinter::printExitSuccess(cout,licensePlate,exitTime,price);
+        return SUCCESS;
+
 
 
 
