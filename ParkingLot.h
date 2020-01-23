@@ -4,14 +4,21 @@
 #include "ParkingLotTypes.h"
 #include "Time.h"
 #include "ParkingSpot.h"
+#include "ParkingLotPrinter.h"
 #include "UniqueArray.h"
 #include "string"
+
+#include "vector"
+
+// #inclue <iostream>
 
 namespace MtmParkingLot {
 
     using namespace ParkingLotUtils;
     using std::ostream;
     using std::cout;
+    //using std::vector;
+    //using std::sort;
 
 
 
@@ -30,7 +37,7 @@ namespace MtmParkingLot {
         Vehicle(LicensePlate plate_number, VehicleType type, Time time);
         ~Vehicle() = default;
         Vehicle(const Vehicle& other) = default;
-        Vehicle& operator=(const Vehicle&) = delete;
+        Vehicle& operator=(const Vehicle&) = default;
         VehicleType getType() const;
         bool operator== (const Vehicle &v1)const;
         bool getIfVehicleIsFined() const{
@@ -63,14 +70,18 @@ namespace MtmParkingLot {
     }
 
 
-
-
     class Compare {
     public:
         bool operator() (const Vehicle& v1, const Vehicle &v2){
             return v1==v2;
         }
     };
+
+
+
+
+
+
 
 
     class ParkingLot {
@@ -81,7 +92,8 @@ namespace MtmParkingLot {
 
     public:
         ParkingLot(unsigned int parkingBlockSizes[]);
-        ~ParkingLot();
+        ~ParkingLot() = default;
+        // need to implement cctor and defassign ctor
         ParkingResult enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
         ParkingResult exitParking(LicensePlate licensePlate, Time exitTime);
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
@@ -105,13 +117,6 @@ namespace MtmParkingLot {
             motorbikes_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[0])),
             handicapped_cars_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[1])),
             cars_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[2])){
-
-        // create an array for each vehicle type
-        /*
-        this->motorbikes_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[0]);
-        this->handicapped_cars_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[1]);
-        this->cars_arr = UniqueArray <Vehicle,Compare> (parkingBlockSizes[2]);
-         */
 
         //expections
 
@@ -280,6 +285,28 @@ namespace MtmParkingLot {
         ParkingLotPrinter::printExitSuccess(cout,parkingSpot,exitTime,price);
         return SUCCESS;
     }
+
+    ostream& ParkingLot:: operator<<(ostream& os, const ParkingLot& parkingLot) {
+        ParkingLotPrinter::printParkingLotTitle(os);
+        // create a new array with all of the vehicles and sort them in it?
+        unsigned int vector_size = motorbikes_arr.getSize() + handicapped_cars_arr.getSize() + cars_arr.getSize();
+        vector<Vehicle> parking_lot_vector(vector_size);
+        for(unsigned int i=0; i < vector_size; i++){
+            parking_lot_vector[i] = 
+        }
+
+
+        // for the array:
+
+        ParkingLotPrinter::printVehicle(os, vehicleType, licensePlate, entranceTime);
+        ParkingLotPrinter::printParkingSpot(os, parkingSpot);
+
+
+
+        return os;
+    }
+
+
 }
 
 
