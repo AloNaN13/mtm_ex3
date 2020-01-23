@@ -21,12 +21,13 @@ public:
     unsigned int getCount() const;
     unsigned int getSize() const;
 
+    Element* getElement(unsigned int index) {return data[index];}
+
     class Filter {
     public:
         virtual bool operator() (const Element&) const = 0;
     };
     UniqueArray filter(const Filter& f) const;
-
     class UniqueArrayIsFullException{};
     
 };

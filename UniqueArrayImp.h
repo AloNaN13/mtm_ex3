@@ -113,7 +113,7 @@ unsigned int UniqueArray<Element,Compare>::  getSize() const{
 
 template <class Element, class Compare >
 UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(const Filter& f) const{
-    UniqueArray filterd_array(max_size);//when change to template will need to add the class
+    UniqueArray filterd_array(max_size);
     for(unsigned int  i=0;i<max_size;i++){
         if(f.operator()(*data[i])){
             filterd_array.data[i]=new Element(*data[i]);
