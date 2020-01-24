@@ -9,6 +9,7 @@
 #include "string"
 
 #include "vector"
+#include "algorithm"
 
 // #inclue <iostream>
 
@@ -46,6 +47,9 @@ namespace MtmParkingLot {
         void setGotFined(){
             got_fined= true;
         }
+        const LicensePlate getLicensePlate() {
+            return license_plate;
+        };
         Time getEntranceTime()const {
             return time_of_entrance;
         }
@@ -81,7 +85,7 @@ namespace MtmParkingLot {
     };
 
 
-class MoreThan24Hours :public UniqueArray<Vehicle,Compare>::Filter{
+    class MoreThan24Hours :public UniqueArray<Vehicle,Compare>::Filter{
     private:
     Time inspectionTime;
     public:
@@ -103,11 +107,13 @@ class MoreThan24Hours :public UniqueArray<Vehicle,Compare>::Filter{
         bool  checkIfExistsSpot(const VehicleType vehicleType);
         void  enterVehicleToParking(const Vehicle &register_vehicle,const  VehicleType vt);
         int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
-        unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,MoreThan24Hours& inspectopn);
+        unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,MoreThan24Hours& inspection);
 
     public:
         ParkingLot(unsigned int parkingBlockSizes[]);
         ~ParkingLot() = default;
+        ParkingLot(const ParkingLot& other) = default;
+        ParkingLot& operator=(const ParkingLot&) = delete;
         // need to implement cctor and defassign ctor
         ParkingResult enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
         ParkingResult exitParking(LicensePlate licensePlate, Time exitTime);
@@ -335,6 +341,45 @@ class MoreThan24Hours :public UniqueArray<Vehicle,Compare>::Filter{
         
     }
 
+    bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) {
+        ParkingSpot parking_spot_1, parking_spot_2;
+        ParkingLot::getParkingSpot(Vehicle::getLicensePlate(vehicle1), parking_spot_1);
+        ParkingLot::getParkingSpot(Vehicle::getLicensePlate(vehicle2), parking_spot_2);
+        return (parking_spot_1 < parking_spot_2);
+    };
+
+    ostream& ParkingLot:: operator<<(ostream& os, const ParkingLot& parkingLot) {
+        ParkingLotPrinter::printParkingLotTitle(os);
+        // create a new array with all of the vehicles and sort them in it?
+        unsigned int motorbikes = motorbikes_arr.getSize(), handicapped = handicapped_cars_arr.getSize(), cars = cars_arr.getSize();
+        unsigned int vector_size = motorbikes + handicapped + cars;
+        vector<Vehicle> parking_lot_vector(vector_size);
+        for(unsigned int i=0; i < motorbikes; i++){
+            parking_lot_vector[i] = motorbikes_arr.getElement(i);
+        }
+        for(unsigned int i=0; i < handicapped; i++){
+            parking_lot_vector[motorbikes + i] = handicapped_cars_arr.getElement(i);
+        }
+        for(unsigned int i=0; i < cars; i++){
+            parking_lot_vector[motorbikes + handicapped + i] = cars_arr.getElement(i);
+        }
+        sort(parking_lot_vector.begin(), parking_lot_vector.end(), CompareParkingSpots);
+
+        // for the array:
+        for(unsigned int j = parking_lot_vector.begin(); j < parking_lot_vector.end(), j++) {
+            ParkingLotPrinter::printVehicle(os, Vehicle::getType(parking_lot_vector[j]),
+                                            Vehicle::getLicensePlate(parking_lot_vector[j]),
+                                            Vehicle::getEntranceTime(parking_lot_vector[j]));
+            ParkingSpot parking_spot;
+            ParkingLot::getParkingSpot(Vehicle::getLicensePlate(parking_lot_vector[j]), parking_spot),
+            ParkingLotPrinter::printParkingSpot(os, parking_spot);
+        }
+
+        return os;
+    }
+    // see if i can make this function better
+    // try with only parkingSpot?
+
 
 }
 
@@ -342,6 +387,9 @@ class MoreThan24Hours :public UniqueArray<Vehicle,Compare>::Filter{
 
 
 #endif //MTMPARKINGLOT_PARKINGLOT_H
+
+
+
 
 
 
