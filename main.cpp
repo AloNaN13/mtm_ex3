@@ -29,12 +29,16 @@ int main() {
         array[i]=i+4;
     }
     ParkingLot parkingLot(array);
-    VehicleType vt=MOTORBIKE;
+    VehicleType vt_motor=MOTORBIKE;
+    VehicleType vt_car=CAR;
     LicensePlate lp0="ABCD";
-    Time t(0,3,2);
-    parkingLot.enterParking(vt,lp0,t);
-    LicensePlate lp1="ABCDe";
-    parkingLot.enterParking(vt,lp1,t);
+    Time t_motor_in(0,3,2);
+    Time t_car(0,3,4);
+    Time t_motor_out(0,3,7);
+    parkingLot.enterParking(vt_motor,lp0,t_motor_in);
+    LicensePlate lp1="ABCD-car";
+    parkingLot.enterParking(vt_car,lp1,t_car);
+    parkingLot.exitParking(lp0, t_motor_out);
     cout<<parkingLot;
 
 

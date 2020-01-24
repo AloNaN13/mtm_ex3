@@ -59,7 +59,7 @@ namespace MtmParkingLot {
             return license_plate;
         };
         ParkingSpot getVehicleParkingSpot()const { return parkingSpot;};
-        void setParkingspot(ParkingSpot parkingSpot1){this->parkingSpot=parkingSpot1;};
+        void setParkingspot(ParkingSpot& parkingSpot1){ this->parkingSpot=parkingSpot1;};
         Time getEntranceTime()const {
             return time_of_entrance;
         }
@@ -118,7 +118,7 @@ namespace MtmParkingLot {
         bool  enterVehicleToParking(Vehicle &register_vehicle,const  VehicleType vt);
         int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
         unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime);
-        const bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) const;
+        //const bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) const;
 
             public:
         ParkingLot(unsigned int parkingBlockSizes[]);
@@ -276,6 +276,7 @@ namespace MtmParkingLot {
         ParkingSpot spot;
         if(exists!=NULL){
             getParkingSpot(licensePlate,spot);
+            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
             ParkingLotPrinter::printEntryFailureAlreadyParked(cout,spot);
             return VEHICLE_ALREADY_PARKED;
         }
@@ -287,6 +288,7 @@ namespace MtmParkingLot {
             return NO_EMPTY_SPOT;
         }*/
         if(!enterVehicleToParking(new_vehicle,vehicleType)){
+            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
             ParkingLotPrinter::printEntryFailureNoSpot(cout);
             return NO_EMPTY_SPOT;
         }
@@ -312,7 +314,7 @@ namespace MtmParkingLot {
         * ,hours of stay and if it got fined
         */
     int ParkingLot::getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time){
-        int price=0;
+    int price=0;
         Time total_stay_time=exit_time-vehicle.getEntranceTime();
         int total_hours=total_stay_time.toHours();
         if(vehicle.getType()==HANDICAPPED){
@@ -343,11 +345,13 @@ namespace MtmParkingLot {
     ParkingLotUtils:: ParkingResult ParkingLot::
     exitParking(LicensePlate licensePlate, Time exitTime){
         const Vehicle* exists= getVehicleFromLicensePlate(licensePlate);
-        if(exists==NULL){
-            ParkingLotPrinter::printExitFailure(cout,licensePlate);
+        std::cout << "the vehicle type to exit: " << (*exists).getType() << std::endl;
+        if(exists==NULL) {
+            ParkingLotPrinter::printExitFailure(cout, licensePlate);
             return VEHICLE_NOT_FOUND;
         }
         int price=getPriceForVehicleAtExit(*exists,exitTime);
+        //ParkingLotPrinter::printVehicle(cout, (*exists).getType(),licensePlate,(*exists).getEntranceTime());
         ParkingSpot parking_spot=(*exists).getVehicleParkingSpot();
         //getParkingSpot(licensePlate,parkingSpot);
 
@@ -402,12 +406,14 @@ namespace MtmParkingLot {
 
     }
 
+    /*
     const bool ParkingLot:: CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) const {
         ParkingSpot parking_spot_1, parking_spot_2;
         ParkingLot::getParkingSpot(vehicle1.getLicensePlate(), parking_spot_1);
         ParkingLot::getParkingSpot(vehicle2.getLicensePlate(), parking_spot_2);
         return (parking_spot_1 < parking_spot_2);
     };
+    */
 
     ostream& operator<<(ostream& os, const ParkingLot& parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
@@ -415,7 +421,7 @@ namespace MtmParkingLot {
         unsigned int motorbikes = parkingLot.motorbikes_arr.getCount();
         unsigned  int handicapped = parkingLot.handicapped_cars_arr.getCount();
         unsigned  int cars = parkingLot.cars_arr.getCount();
-        unsigned int vector_size = motorbikes + handicapped + cars;
+        //unsigned int vector_size = motorbikes + handicapped + cars;
 
         std::vector<Vehicle> parking_lot_vector;
         for(unsigned int i=0; i < parkingLot.motorbikes_arr.getSize(); i++){
