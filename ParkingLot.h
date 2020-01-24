@@ -349,15 +349,16 @@ namespace MtmParkingLot {
             return VEHICLE_NOT_FOUND;
         }
         int price=getPriceForVehicleAtExit(*exists,exitTime);
-        ParkingSpot parkingSpot;
-        getParkingSpot(licensePlate,parkingSpot);
+        ParkingSpot parking_spot=(*exists).getVehicleParkingSpot();
+        //getParkingSpot(licensePlate,parkingSpot);
 
         unsigned int index;
         //Move to outside function
-        if(exists->getType()==MOTORBIKE){
+        //if(exists->getType()==MOTORBIKE){
+        if(parking_spot.getParkingBlock()==MOTORBIKE){
             motorbikes_arr.remove(*exists);
             //assert success
-        }else if(exists->getType()==CAR){
+        }else if(parking_spot.getParkingBlock()==CAR){
             cars_arr.remove(*exists);
         }
         //value= Handicapped
@@ -368,7 +369,7 @@ namespace MtmParkingLot {
         else{
             cars_arr.remove(*exists);
         }
-        ParkingLotPrinter::printExitSuccess(cout,parkingSpot,exitTime,price);
+        ParkingLotPrinter::printExitSuccess(cout,parking_spot,exitTime,price);
         return SUCCESS;
     }
 
