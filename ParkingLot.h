@@ -58,6 +58,7 @@ namespace MtmParkingLot {
         LicensePlate getLicensePlate() const{
             return license_plate;
         };
+        ParkingSpot getVehicleParkingSpot()const { return parkingSpot;};
         void setParkingspot(ParkingSpot parkingSpot1){this->parkingSpot=parkingSpot1;};
         Time getEntranceTime()const {
             return time_of_entrance;
@@ -114,7 +115,7 @@ namespace MtmParkingLot {
 
         const Vehicle* getVehicleFromLicensePlate(LicensePlate licensePlate)const;
         bool  checkIfExistsSpot(const VehicleType vehicleType);
-        bool  enterVehicleToParking(const Vehicle &register_vehicle,const  VehicleType vt);
+        bool  enterVehicleToParking(Vehicle &register_vehicle,const  VehicleType vt);
         int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
         unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime);
         const bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) const;
@@ -153,8 +154,9 @@ namespace MtmParkingLot {
         const Vehicle* vehicle_in_arr = getVehicleFromLicensePlate(licensePlate);
         if(vehicle_in_arr != NULL) {
             // get parking block, get parking number, put it in parkingSpot
-            VehicleType vehicle_block = (*vehicle_in_arr).getType();
-            //std::cout << "the block is: " << vehicle_block << std::endl;
+             parkingSpot =(*vehicle_in_arr).getVehicleParkingSpot();
+            return SUCCESS;
+            VehicleType vehicle_block = vehicle_in_arr->getType();
             unsigned int vehicle_number = -1;
             if(vehicle_block == MOTORBIKE){
                 motorbikes_arr.getIndex(*vehicle_in_arr, vehicle_number);
@@ -228,22 +230,26 @@ namespace MtmParkingLot {
          * @param register_vehicle-the vehicle we should enter
          * @param vt-the VehicleType of the vehicle
          */
-    bool MtmParkingLot::ParkingLot:: enterVehicleToParking(const Vehicle& register_vehicle, const VehicleType vt){
+    bool MtmParkingLot::ParkingLot:: enterVehicleToParking(Vehicle& register_vehicle, const VehicleType vt){
         if(vt==MOTORBIKE){
             try{
-                motorbikes_arr.insert(register_vehicle);
+                int num=motorbikes_arr.insert(register_vehicle);
+                ParkingSpot spot(MOTORBIKE,num);
+                register_vehicle.setParkingspot(spot);
             }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
                 return false;
             }
             return true;
-        }
-
-        else if(vt==HANDICAPPED){
+        }else if(vt==HANDICAPPED){
             try{
-                handicapped_cars_arr.insert(register_vehicle);
+                int num=handicapped_cars_arr.insert(register_vehicle);
+                ParkingSpot spot(HANDICAPPED,num);
+                register_vehicle.setParkingspot(spot);
             }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
                 try{
-                    cars_arr.insert(register_vehicle);
+                    int num=cars_arr.insert(register_vehicle);
+                    ParkingSpot spot(CAR,num);
+                    register_vehicle.setParkingspot(spot);
                 }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
                     return false;
                 }
@@ -251,7 +257,9 @@ namespace MtmParkingLot {
             }
         }else {
             try{
-                cars_arr.insert(register_vehicle);
+                int num=cars_arr.insert(register_vehicle);
+                ParkingSpot spot(CAR,num);
+                register_vehicle.setParkingspot(spot);
             }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
                 return false;
             }
@@ -285,8 +293,12 @@ namespace MtmParkingLot {
         }
         //insers was succesfull
 
-        getParkingSpot(licensePlate,spot);
-        new_vehicle.setParkingspot(spot);
+        //getParkingSpot(licensePlate,spot);
+
+
+        //new_vehicle.setParkingspot(spot);
+        spot=new_vehicle.getVehicleParkingSpot();
+        ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
         ParkingLotPrinter::printEntrySuccess(cout,spot);
         return SUCCESS;
     }

@@ -26,13 +26,18 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
     unsigned  int array[3];
     for(int i=0;i<3;i++){
-        array[i]=i;
+        array[i]=i+4;
     }
     ParkingLot parkingLot(array);
     VehicleType vt=MOTORBIKE;
-    LicensePlate lp="ABCD";
+    LicensePlate lp0="ABCD";
     Time t(0,3,2);
-    parkingLot.enterParking(vt,lp,t);
+    parkingLot.enterParking(vt,lp0,t);
+    LicensePlate lp1="ABCDe";
+    parkingLot.enterParking(vt,lp1,t);
+    cout<<parkingLot;
+
+
 
 
     return 0;
