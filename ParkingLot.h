@@ -117,7 +117,7 @@ namespace MtmParkingLot {
         bool  enterVehicleToParking(const Vehicle &register_vehicle,const  VehicleType vt);
         int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
         unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime);
-        bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2);
+        const bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) const;
 
             public:
         ParkingLot(unsigned int parkingBlockSizes[]);
@@ -385,7 +385,7 @@ namespace MtmParkingLot {
 
     }
 
-    bool ParkingLot:: CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) {
+    const bool ParkingLot:: CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) const {
         ParkingSpot parking_spot_1, parking_spot_2;
         ParkingLot::getParkingSpot(vehicle1.getLicensePlate(), parking_spot_1);
         ParkingLot::getParkingSpot(vehicle2.getLicensePlate(), parking_spot_2);
