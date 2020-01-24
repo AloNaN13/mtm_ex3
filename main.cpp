@@ -32,14 +32,20 @@ int main() {
     VehicleType vt_motor=MOTORBIKE;
     VehicleType vt_car=CAR;
     LicensePlate lp0="ABCD";
-    Time t_motor_in(0,3,2);
-    Time t_car(0,3,4);
-    Time t_motor_out(0,3,7);
-    parkingLot.enterParking(vt_motor,lp0,t_motor_in);
-    LicensePlate lp1="ABCD-car";
-    parkingLot.enterParking(vt_car,lp1,t_car);
-    parkingLot.exitParking(lp0, t_motor_out);
-    cout<<parkingLot;
+    Time t(0,3,2);
+    parkingLot.enterParking(vt,lp0,t);
+    LicensePlate lp1="RON";
+    parkingLot.enterParking(CAR,lp1,t);
+    parkingLot.enterParking(CAR,lp1,t);
+    parkingLot.enterParking(CAR,"AVITAL",t);
+    ParkingSpot spot;
+    parkingLot.getParkingSpot(lp1,spot);
+    printf("the spot of avital is:\n");
+    cout<<spot;
+    parkingLot.enterParking(CAR,"AVITAL",t);
+
+
+    //cout<<parkingLot;
 
 
 
