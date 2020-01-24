@@ -105,7 +105,7 @@ namespace MtmParkingLot {
 
         const Vehicle* getVehicleFromLicensePlate(LicensePlate licensePlate)const;
         bool  checkIfExistsSpot(const VehicleType vehicleType);
-        void  enterVehicleToParking(const Vehicle &register_vehicle,const  VehicleType vt);
+        bool  enterVehicleToParking(const Vehicle &register_vehicle,const  VehicleType vt);
         int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
         unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime);
         const bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) const;
@@ -217,21 +217,34 @@ namespace MtmParkingLot {
          * @param register_vehicle-the vehicle we should enter
          * @param vt-the VehicleType of the vehicle
          */
-    void MtmParkingLot::ParkingLot:: enterVehicleToParking(const Vehicle& register_vehicle, const VehicleType vt){
+    bool MtmParkingLot::ParkingLot:: enterVehicleToParking(const Vehicle& register_vehicle, const VehicleType vt){
         if(vt==MOTORBIKE){
-            motorbikes_arr.insert(register_vehicle);
+            try{
+                motorbikes_arr.insert(register_vehicle);
+            }catch (class UniqueArrayIsFullException()){
+                return false;
+            }
             //assert success
-            return;
+            return true;
         }
         else if(vt==HANDICAPPED){
-            if(handicapped_cars_arr.getCount()!=handicapped_cars_arr.getSize()){
+            try{
                 handicapped_cars_arr.insert(register_vehicle);
-                return;
+            }catch (class UniqueArrayIsFullException()){
+                try{
+                    cars_arr.insert(register_vehicle);
+                }catch (class UniqueArrayIsFullException()){
+                    return false;
+                }
+                return true;
             }
         }
-        //if we are here than the vt is handicappes or cars and in any case we should
-        //insert the vehicle to the cars section
-        cars_arr.insert(register_vehicle);
+        try{
+            cars_arr.insert(register_vehicle);
+        }catch (class UniqueArrayIsFullException()){
+            return false;
+        }
+        return true;
     }
 
     ParkingLotUtils:: ParkingResult ParkingLot:: enterParking(VehicleType vehicleType,
@@ -248,11 +261,16 @@ namespace MtmParkingLot {
         }
 
         //vehicle isn't parked already
-        if(!checkIfExistsSpot(vehicleType)){
+
+        /*if(!checkIfExistsSpot(vehicleType)){
+            ParkingLotPrinter::printEntryFailureNoSpot(cout);
+            return NO_EMPTY_SPOT;
+        }*/
+        if(!enterVehicleToParking(new_vehicle,vehicleType)){
             ParkingLotPrinter::printEntryFailureNoSpot(cout);
             return NO_EMPTY_SPOT;
         }
-        enterVehicleToParking(new_vehicle,vehicleType);
+        //insers was succesfull
         getParkingSpot(licensePlate,spot);
         ParkingLotPrinter::printEntrySuccess(cout,spot);
         return SUCCESS;
@@ -378,7 +396,7 @@ namespace MtmParkingLot {
         for(unsigned int i=0; i < cars; i++){
             parking_lot_vector[motorbikes + handicapped + i] = *parkingLot.cars_arr.getElement(i);
         }
-        sort(parking_lot_vector.begin(), parking_lot_vector.end(), parkingLot.CompareParkingSpots);
+        sort(parking_lot_vector.begin(), parking_lot_vector.end(), CompareParkingSpots);
 
         // for the array:
         for(unsigned int j = 0; j < vector_size; j++) {
