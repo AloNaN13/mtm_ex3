@@ -107,7 +107,7 @@ namespace MtmParkingLot {
         bool  checkIfExistsSpot(const VehicleType vehicleType);
         void  enterVehicleToParking(const Vehicle &register_vehicle,const  VehicleType vt);
         int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
-        unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,MoreThan24Hours& inspection);
+        unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime);
         bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2);
 
             public:
@@ -257,9 +257,15 @@ namespace MtmParkingLot {
         ParkingLotPrinter::printEntrySuccess(cout,spot);
         return SUCCESS;
     }
-
-
-
+    /**
+        * @brief calculets the price the given vehicle should pay
+        *
+        * @param vehicle-the wanted vehicle
+        * @param exit_time-the exit time of the given vehicle from the parking_lot
+        *
+        * return- the amount the vehicle should pay at exit, considering its type
+        * ,hours of stay and if it got fined
+        */
     int ParkingLot::getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time){
         int price=0;
         Time total_stay_time=exit_time-vehicle.getEntranceTime();
@@ -320,7 +326,16 @@ namespace MtmParkingLot {
         return SUCCESS;
     }
 
-    unsigned int ParkingLot::filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,MoreThan24Hours& inspection){
+    /**
+        * @brief filters the vehicles at the given u
+        *
+        * @param vehicle-the wanted vehicle
+        * @param exit_time-the exit time of the given vehicle from the parking_lot
+        *
+        * return- the amount vehicles that passed the filter
+        */
+    unsigned int ParkingLot::filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime){
+        MoreThan24Hours inspection(inspectionTime);
         UniqueArray<Vehicle,Compare> uq_filtered =wanted_uq.filter(inspection);
         for(unsigned int i=0;i<uq_filtered.getSize();i++){
             if(!uq_filtered.getElement(i)){
@@ -334,11 +349,11 @@ namespace MtmParkingLot {
         MoreThan24Hours inspection(inspectionTime);
         unsigned int count_fined=0;
         //UniqueArray<Vehicle,Compare> motors_filtered =motorbikes_arr.filter(inspection);
-        count_fined=count_fined+filterUniqueArray(motorbikes_arr,inspection);
-        count_fined=count_fined+filterUniqueArray(cars_arr,inspection);
-        count_fined+filterUniqueArray(handicapped_cars_arr,inspection);
+        count_fined=count_fined+filterUniqueArray(motorbikes_arr,inspectionTime);
+        count_fined=count_fined+filterUniqueArray(cars_arr,inspectionTime);
+        count_fined=count_fined+filterUniqueArray(handicapped_cars_arr,inspectionTime);
         ParkingLotPrinter::printInspectionResult(cout,inspectionTime,count_fined);
-        
+
     }
 
     bool ParkingLot:: CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) {
@@ -371,7 +386,7 @@ namespace MtmParkingLot {
                                             parking_lot_vector[j].getLicensePlate,
                                             parking_lot_vector[j].getEntranceTime);
             ParkingSpot parking_spot;
-            ParkingLot::getParkingSpot(parking_lot_vector[j].getLicensePlate, parking_spot);
+            parkingLot.getParkingSpot(parking_lot_vector[j].getLicensePlate(), parking_spot);
             ParkingLotPrinter::printParkingSpot(os, parking_spot);
         }
 
