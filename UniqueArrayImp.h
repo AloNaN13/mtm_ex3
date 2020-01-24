@@ -16,13 +16,16 @@ UniqueArray<Element,Compare>:: UniqueArray(unsigned int size) : max_size(size), 
 }
 
 template <class Element, class Compare >
-UniqueArray<Element,Compare>:: UniqueArray(const UniqueArray& other): max_size(other.max_size),
-                                                                      data(new Element*[other.max_size]){
+UniqueArray<Element,Compare>:: UniqueArray(const UniqueArray & other): max_size(other.max_size),
+                                                                   data(new Element*[other.max_size]){
+
     for(unsigned int i=0;i<max_size;i++){
-        data[i]=new Element(*other.data[i]);
+        if(other.data[i]) {
+            data[i] = new Element(*other.data[i]);
+        }else{
+            data[i]=NULL;
+        }
     }
-
-
 }
 
 template <class Element, class Compare >
@@ -117,9 +120,11 @@ template <class Element, class Compare >
 UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(const Filter& f) const{
     UniqueArray filterd_array(max_size);
     for(unsigned int  i=0;i<max_size;i++){
-        if(f.operator()(*data[i])){
-            filterd_array.data[i]=new Element(*data[i]);
-        }
+        if(data[i]!=NULL) {
+            if (f.operator()(*data[i])) {
+                filterd_array.data[i] = new Element(*data[i]);
+            }else(filterd_array.data[i]=NULL);
+        }else(filterd_array.data[i]=NULL);
     }
     return filterd_array;
 
