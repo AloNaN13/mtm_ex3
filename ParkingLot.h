@@ -153,7 +153,8 @@ namespace MtmParkingLot {
         const Vehicle* vehicle_in_arr = getVehicleFromLicensePlate(licensePlate);
         if(vehicle_in_arr != NULL) {
             // get parking block, get parking number, put it in parkingSpot
-            VehicleType vehicle_block = vehicle_in_arr->getType();
+            VehicleType vehicle_block = (*vehicle_in_arr).getType();
+            //std::cout << "the block is: " << vehicle_block << std::endl;
             unsigned int vehicle_number = -1;
             if(vehicle_block == MOTORBIKE){
                 motorbikes_arr.getIndex(*vehicle_in_arr, vehicle_number);
@@ -168,6 +169,7 @@ namespace MtmParkingLot {
                 }
             }
 
+            std::cout << "the spot_number is: " << vehicle_number << std::endl;
             ParkingSpot temp_parking_spot(vehicle_block, vehicle_number);
             parkingSpot = temp_parking_spot;
             return SUCCESS;
