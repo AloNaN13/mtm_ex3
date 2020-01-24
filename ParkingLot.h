@@ -397,12 +397,13 @@ namespace MtmParkingLot {
             //assert success
         }else if(parking_spot.getParkingBlock()==CAR){
             cars_arr.remove(*exists);
+            ParkingLotPrinter::printExitSuccess(cout,parking_spot,exitTime,price);
             return SUCCESS;
         }
         //value= Handicapped
         else if(handicapped_cars_arr.getIndex(*exists,index)){//the car is in handicapped
-            ParkingLotPrinter::printExitSuccess(cout,parking_spot,exitTime,price);
             handicapped_cars_arr.remove(*exists);
+            ParkingLotPrinter::printExitSuccess(cout,parking_spot,exitTime,price);
             return SUCCESS;
         }
         //vechile is in the car
