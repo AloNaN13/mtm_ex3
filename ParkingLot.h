@@ -384,7 +384,7 @@ namespace MtmParkingLot {
     ostream& operator<<(ostream& os, const ParkingLot& parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
         // create a new array with all of the vehicles and sort them in it?
-        unsigned int motorbikes = parkingLot.motorbikes_arr.getSize(), handicapped = parkingLot.handicapped_cars_arr.getSize(), cars = parkingLot.cars_arr.getSize();
+        unsigned int motorbikes = parkingLot.motorbikes_arr.getCount(), handicapped = parkingLot.handicapped_cars_arr.getCount(), cars = parkingLot.cars_arr.getCount();
         unsigned int vector_size = motorbikes + handicapped + cars;
         std::vector<Vehicle> parking_lot_vector(vector_size);
         for(unsigned int i=0; i < motorbikes; i++){
@@ -396,7 +396,7 @@ namespace MtmParkingLot {
         for(unsigned int i=0; i < cars; i++){
             parking_lot_vector[motorbikes + handicapped + i] = *parkingLot.cars_arr.getElement(i);
         }
-        sort(parking_lot_vector.begin(), parking_lot_vector.end(), CompareParkingSpots);
+        std::sort(parking_lot_vector.begin(), parking_lot_vector.end(), parkingLot.CompareParkingSpots);
 
         // for the array:
         for(unsigned int j = 0; j < vector_size; j++) {
@@ -411,6 +411,7 @@ namespace MtmParkingLot {
         return os;
     }
     // see if i can make this function better
+    // try to write it differently while no vector_size
     // try with only parkingSpot?
     // try the for loop with iterator?
 
