@@ -13,8 +13,10 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
 
 add_executable(mtm_ex3
         #tests/UniqueArrayTest.cpp
-        MtmParkingLot.cpp
-        #main.cpp
+        #MtmParkingLot.cpp
+        #facebooktests/main2.cpp
+        main.cpp
+        #facebooktests/OurUATests.cpp
         ParkingLot.h
         ParkingLotPrinter.cpp
         ParkingLotPrinter.h
