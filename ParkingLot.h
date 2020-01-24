@@ -317,6 +317,7 @@ namespace MtmParkingLot {
         }
 
         if(!checkIfExistsSpot(vehicleType)){
+            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
             ParkingLotPrinter::printEntryFailureNoSpot(cout);
             return NO_EMPTY_SPOT;
         }
