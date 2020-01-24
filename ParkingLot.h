@@ -32,24 +32,33 @@ namespace MtmParkingLot {
         VehicleType vehicle_type;
         Time time_of_entrance;
         bool got_fined;
+
+        ParkingSpot parkingSpot;
+
+
     public:
 
+        Vehicle(){};
         Vehicle(LicensePlate plate_number);
         Vehicle(LicensePlate plate_number, VehicleType type, Time time);
         ~Vehicle() = default;
         Vehicle(const Vehicle& other) = default;
         Vehicle& operator=(const Vehicle&) = default;
-        VehicleType getType() const;
+        VehicleType getType() const ;
         bool operator== (const Vehicle &v1)const;
+        bool operator<(Vehicle& v1){
+            return parkingSpot<v1.parkingSpot;
+        };
         bool getIfVehicleIsFined() const{
             return got_fined;
         }
         void setGotFined(){
             got_fined= true;
         }
-        LicensePlate getLicensePlate() {
+        LicensePlate getLicensePlate() const{
             return license_plate;
         };
+        void setParkingspot(ParkingSpot parkingSpot1){this->parkingSpot=parkingSpot1;};
         Time getEntranceTime()const {
             return time_of_entrance;
         }
@@ -271,7 +280,9 @@ namespace MtmParkingLot {
             return NO_EMPTY_SPOT;
         }
         //insers was succesfull
+
         getParkingSpot(licensePlate,spot);
+        new_vehicle.setParkingspot(spot);
         ParkingLotPrinter::printEntrySuccess(cout,spot);
         return SUCCESS;
     }
@@ -384,22 +395,31 @@ namespace MtmParkingLot {
     ostream& operator<<(ostream& os, const ParkingLot& parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
         // create a new array with all of the vehicles and sort them in it?
-        unsigned int motorbikes = parkingLot.motorbikes_arr.getSize(), handicapped = parkingLot.handicapped_cars_arr.getSize(), cars = parkingLot.cars_arr.getSize();
+        unsigned int motorbikes = parkingLot.motorbikes_arr.getCount();
+        unsigned  int handicapped = parkingLot.handicapped_cars_arr.getCount();
+        unsigned  int cars = parkingLot.cars_arr.getCount();
         unsigned int vector_size = motorbikes + handicapped + cars;
-        std::vector<Vehicle> parking_lot_vector(vector_size);
-        for(unsigned int i=0; i < motorbikes; i++){
-            parking_lot_vector[i] = *parkingLot.motorbikes_arr.getElement(i);
+
+        std::vector<Vehicle> parking_lot_vector;
+        for(unsigned int i=0; i < parkingLot.motorbikes_arr.getSize(); i++){
+            if(parkingLot.motorbikes_arr.getElement(i)!=NULL) {
+                parking_lot_vector.push_back(*(parkingLot.motorbikes_arr.getElement(i)));
+            }
         }
-        for(unsigned int i=0; i < handicapped; i++){
-            parking_lot_vector[motorbikes + i] = *parkingLot.handicapped_cars_arr.getElement(i);
+        for(unsigned int i=0; i < parkingLot.cars_arr.getSize(); i++) {
+            if (parkingLot.cars_arr.getElement(i) != NULL) {
+                parking_lot_vector.push_back(*(parkingLot.cars_arr.getElement(i)));
+            }
         }
-        for(unsigned int i=0; i < cars; i++){
-            parking_lot_vector[motorbikes + handicapped + i] = *parkingLot.cars_arr.getElement(i);
+        for(unsigned int i=0; i < parkingLot.handicapped_cars_arr.getSize(); i++){
+            if(parkingLot.handicapped_cars_arr.getElement(i)!=NULL) {
+                parking_lot_vector.push_back( *parkingLot.handicapped_cars_arr.getElement(i));
+            }
         }
-        sort(parking_lot_vector.begin(), parking_lot_vector.end(), CompareParkingSpots);
+        std::sort(parking_lot_vector.begin(), parking_lot_vector.end());
 
         // for the array:
-        for(unsigned int j = 0; j < vector_size; j++) {
+        for(unsigned int j = 0; j < parking_lot_vector.size(); j++) {
             ParkingLotPrinter::printVehicle(os, parking_lot_vector[j].getType(),
                                             parking_lot_vector[j].getLicensePlate(),
                                             parking_lot_vector[j].getEntranceTime());
@@ -407,6 +427,7 @@ namespace MtmParkingLot {
             parkingLot.getParkingSpot(parking_lot_vector[j].getLicensePlate(), parking_spot);
             ParkingLotPrinter::printParkingSpot(os, parking_spot);
         }
+
 
         return os;
     }
