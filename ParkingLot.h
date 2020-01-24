@@ -47,7 +47,7 @@ namespace MtmParkingLot {
         void setGotFined(){
             got_fined= true;
         }
-        const LicensePlate getLicensePlate() {
+        LicensePlate getLicensePlate() {
             return license_plate;
         };
         Time getEntranceTime()const {
@@ -343,8 +343,8 @@ namespace MtmParkingLot {
 
     bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) {
         ParkingSpot parking_spot_1, parking_spot_2;
-        ParkingLot::getParkingSpot(Vehicle::getLicensePlate(vehicle1), parking_spot_1);
-        ParkingLot::getParkingSpot(Vehicle::getLicensePlate(vehicle2), parking_spot_2);
+        ParkingLot::getParkingSpot(vehicle1.getLicensePlate(), parking_spot_1);
+        ParkingLot::getParkingSpot(vehicle2.getLicensePlate(), parking_spot_2);
         return (parking_spot_1 < parking_spot_2);
     };
 
@@ -367,11 +367,11 @@ namespace MtmParkingLot {
 
         // for the array:
         for(unsigned int j = parking_lot_vector.begin(); j < parking_lot_vector.end(), j++) {
-            ParkingLotPrinter::printVehicle(os, Vehicle::getType(parking_lot_vector[j]),
-                                            Vehicle::getLicensePlate(parking_lot_vector[j]),
-                                            Vehicle::getEntranceTime(parking_lot_vector[j]));
+            ParkingLotPrinter::printVehicle(os, parking_lot_vector[j].getType,
+                                            parking_lot_vector[j].getLicensePlate,
+                                            parking_lot_vector[j].getEntranceTime());
             ParkingSpot parking_spot;
-            ParkingLot::getParkingSpot(Vehicle::getLicensePlate(parking_lot_vector[j]), parking_spot),
+            ParkingLot::getParkingSpot(parking_lot_vector[j].getLicensePlate, parking_spot);
             ParkingLotPrinter::printParkingSpot(os, parking_spot);
         }
 
