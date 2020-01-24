@@ -378,13 +378,12 @@ namespace MtmParkingLot {
     ParkingLotUtils:: ParkingResult ParkingLot::
     exitParking(LicensePlate licensePlate, Time exitTime){
         const Vehicle* exists= getVehicleFromLicensePlate(licensePlate);
-        std::cout << "the vehicle type to exit: " << (*exists).getType() << std::endl;
         if(exists==NULL) {
             ParkingLotPrinter::printExitFailure(cout, licensePlate);
             return VEHICLE_NOT_FOUND;
         }
         int price=getPriceForVehicleAtExit(*exists,exitTime);
-        //ParkingLotPrinter::printVehicle(cout, (*exists).getType(),licensePlate,(*exists).getEntranceTime());
+        ParkingLotPrinter::printVehicle(cout, (*exists).getType(),licensePlate,(*exists).getEntranceTime());
         ParkingSpot parking_spot=(*exists).getVehicleParkingSpot();
         //getParkingSpot(licensePlate,parkingSpot);
 
