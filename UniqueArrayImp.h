@@ -76,7 +76,7 @@ const Element* UniqueArray<Element,Compare>::operator[] (const Element& element)
     for(unsigned int i=0;i<max_size;i++){
         if(data[i]!=NULL) {
             if (c(*data[i], element)) {//need to use the compare class and not sure if it will work
-                return &element;
+                return data[i];
             }
         }
     }

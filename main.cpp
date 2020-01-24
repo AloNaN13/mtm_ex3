@@ -33,9 +33,18 @@ int main() {
     LicensePlate lp0="ABCD";
     Time t(0,3,2);
     parkingLot.enterParking(vt,lp0,t);
-    LicensePlate lp1="ABCDe";
-    parkingLot.enterParking(vt,lp1,t);
-    cout<<parkingLot;
+    LicensePlate lp1="RON";
+    parkingLot.enterParking(CAR,lp1,t);
+    parkingLot.enterParking(CAR,lp1,t);
+    parkingLot.enterParking(CAR,"AVITAL",t);
+    ParkingSpot spot;
+    parkingLot.getParkingSpot(lp1,spot);
+    printf("the spot of avital is:\n");
+    cout<<spot;
+    parkingLot.enterParking(CAR,"AVITAL",t);
+
+
+    //cout<<parkingLot;
 
 
 
