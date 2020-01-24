@@ -367,11 +367,11 @@ namespace MtmParkingLot {
 
         // for the array:
         for(unsigned int j = 0; j < vector_size; j++) {
-            ParkingLotPrinter::printVehicle(os, parking_lot_vector[j].getType,
-                                            parking_lot_vector[j].getLicensePlate,
-                                            parking_lot_vector[j].getEntranceTime);
+            ParkingLotPrinter::printVehicle(os, parking_lot_vector[j].getType(),
+                                            parking_lot_vector[j].getLicensePlate(),
+                                            parking_lot_vector[j].getEntranceTime());
             ParkingSpot parking_spot;
-            ParkingLot::getParkingSpot(parking_lot_vector[j].getLicensePlate, parking_spot);
+            parkingLot.getParkingSpot(parking_lot_vector[j].getLicensePlate(), parking_spot);
             ParkingLotPrinter::printParkingSpot(os, parking_spot);
         }
 
