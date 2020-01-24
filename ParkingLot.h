@@ -301,6 +301,7 @@ namespace MtmParkingLot {
         ParkingLotPrinter::printEntrySuccess(cout,spot);
         return SUCCESS;
     }
+
     /**
         * @brief calculets the price the given vehicle should pay
         *
