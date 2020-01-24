@@ -230,28 +230,29 @@ namespace MtmParkingLot {
         if(vt==MOTORBIKE){
             try{
                 motorbikes_arr.insert(register_vehicle);
-            }catch (class UniqueArrayIsFullException()){
+            }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
                 return false;
             }
-            //assert success
             return true;
         }
+
         else if(vt==HANDICAPPED){
             try{
                 handicapped_cars_arr.insert(register_vehicle);
-            }catch (class UniqueArrayIsFullException()){
+            }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
                 try{
                     cars_arr.insert(register_vehicle);
-                }catch (class UniqueArrayIsFullException()){
+                }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
                     return false;
                 }
                 return true;
             }
-        }
-        try{
-            cars_arr.insert(register_vehicle);
-        }catch (class UniqueArrayIsFullException()){
-            return false;
+        }else {
+            try{
+                cars_arr.insert(register_vehicle);
+            }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
+                return false;
+            }
         }
         return true;
     }
@@ -260,6 +261,7 @@ namespace MtmParkingLot {
                                                                              LicensePlate licensePlate, Time entranceTime){
         Vehicle new_vehicle(licensePlate,vehicleType,entranceTime);
         //getVehicleFromArray(motorbikes_arr,licensePlate);
+
 
         const Vehicle* exists= getVehicleFromLicensePlate(licensePlate);
         ParkingSpot spot;

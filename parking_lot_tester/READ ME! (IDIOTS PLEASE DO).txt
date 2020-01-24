@@ -1,0 +1,16 @@
+This script generates input files and valid output files and checks whether they are equal to your script output. Please put your output exe in the script directory, and name it "mtm_ex3.exe". 
+Each time you run the script, 100 files, each having 100 lines of input is generated, and then being run and tested. 
+IMPORTANT: EVERY TIME YOU RUN THE SCRIPT, THE FILES ARE NEW!!!!!
+IMPORTANT #2: The script demands a directory named "io_files" to be in the same directory as the script.
+
+HOW TO RUN:
+1. Validate you have "mtm_exe3.exe" in your script directory.
+2. Validate that you have a folder named "io_files" in your script directory.
+3. click twice on run_me_please.bat
+
+COMMON PROBLEMS:
+1. Make sure when you write "python" in cmd, it runs python 3.7 (as the script expects).
+
+If you find any problems/errors/unexpected behavior please contact us:
+Snir Green
+Ethan Baron
