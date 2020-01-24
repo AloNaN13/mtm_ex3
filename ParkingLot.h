@@ -108,13 +108,13 @@ namespace MtmParkingLot {
         void  enterVehicleToParking(const Vehicle &register_vehicle,const  VehicleType vt);
         int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
         unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,MoreThan24Hours& inspection);
+        bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2);
 
-    public:
+            public:
         ParkingLot(unsigned int parkingBlockSizes[]);
         ~ParkingLot() = default;
         ParkingLot(const ParkingLot& other) = default;
         ParkingLot& operator=(const ParkingLot&) = delete;
-        // need to implement cctor and defassign ctor
         ParkingResult enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
         ParkingResult exitParking(LicensePlate licensePlate, Time exitTime);
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
@@ -341,35 +341,35 @@ namespace MtmParkingLot {
         
     }
 
-    bool CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) {
+    bool ParkingLot:: CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) {
         ParkingSpot parking_spot_1, parking_spot_2;
         ParkingLot::getParkingSpot(vehicle1.getLicensePlate(), parking_spot_1);
         ParkingLot::getParkingSpot(vehicle2.getLicensePlate(), parking_spot_2);
         return (parking_spot_1 < parking_spot_2);
     };
 
-    ostream& ParkingLot:: operator<<(ostream& os, const ParkingLot& parkingLot) {
+    ostream& operator<<(ostream& os, const ParkingLot& parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
         // create a new array with all of the vehicles and sort them in it?
-        unsigned int motorbikes = motorbikes_arr.getSize(), handicapped = handicapped_cars_arr.getSize(), cars = cars_arr.getSize();
+        unsigned int motorbikes = parkingLot.motorbikes_arr.getSize(), handicapped = parkingLot.handicapped_cars_arr.getSize(), cars = parkingLot.cars_arr.getSize();
         unsigned int vector_size = motorbikes + handicapped + cars;
-        vector<Vehicle> parking_lot_vector(vector_size);
+        std::vector<Vehicle> parking_lot_vector(vector_size);
         for(unsigned int i=0; i < motorbikes; i++){
-            parking_lot_vector[i] = motorbikes_arr.getElement(i);
+            parking_lot_vector[i] = *parkingLot.motorbikes_arr.getElement(i);
         }
         for(unsigned int i=0; i < handicapped; i++){
-            parking_lot_vector[motorbikes + i] = handicapped_cars_arr.getElement(i);
+            parking_lot_vector[motorbikes + i] = *parkingLot.handicapped_cars_arr.getElement(i);
         }
         for(unsigned int i=0; i < cars; i++){
-            parking_lot_vector[motorbikes + handicapped + i] = cars_arr.getElement(i);
+            parking_lot_vector[motorbikes + handicapped + i] = *parkingLot.cars_arr.getElement(i);
         }
-        sort(parking_lot_vector.begin(), parking_lot_vector.end(), CompareParkingSpots);
+        sort(parking_lot_vector.begin(), parking_lot_vector.end(), parkingLot.CompareParkingSpots);
 
         // for the array:
-        for(unsigned int j = parking_lot_vector.begin(); j < parking_lot_vector.end(), j++) {
+        for(unsigned int j = 0; j < vector_size; j++) {
             ParkingLotPrinter::printVehicle(os, parking_lot_vector[j].getType,
                                             parking_lot_vector[j].getLicensePlate,
-                                            parking_lot_vector[j].getEntranceTime());
+                                            parking_lot_vector[j].getEntranceTime);
             ParkingSpot parking_spot;
             ParkingLot::getParkingSpot(parking_lot_vector[j].getLicensePlate, parking_spot);
             ParkingLotPrinter::printParkingSpot(os, parking_spot);
@@ -379,6 +379,7 @@ namespace MtmParkingLot {
     }
     // see if i can make this function better
     // try with only parkingSpot?
+    // try the for loop with iterator?
 
 
 }

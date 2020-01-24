@@ -22,6 +22,7 @@ public:
     unsigned int getSize() const;
 
     Element* getElement(unsigned int index) {return data[index];}
+    const Element* getElement(unsigned int index) const {return data[index];}
 
     class Filter {
     public:
