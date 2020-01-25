@@ -317,7 +317,7 @@ namespace MtmParkingLot {
         }
     }
 
-    
+
     ParkingLot:: ParkingLot(unsigned int parkingBlockSizes[]) :
             motorbikes_arr ( UniqueArray<Vehicle,Compare>(
                     parkingBlockSizes[FIRST_BLOCK_SIZES_INDEX])),
