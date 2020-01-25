@@ -10,7 +10,7 @@
 template <class Element, class Compare >
 UniqueArray<Element,Compare>:: UniqueArray(unsigned int size) : max_size(size), data(new Element*[size]){
     for(int i=0;i<max_size;i++){
-        data[i]=NULL;
+        data[i]=nullptr;
     }
 
 }
@@ -23,7 +23,7 @@ UniqueArray<Element,Compare>:: UniqueArray(const UniqueArray & other): max_size(
         if(other.data[i]) {
             data[i] = new Element(*other.data[i]);
         }else{
-            data[i]=NULL;
+            data[i]=nullptr;
         }
     }
 }
@@ -31,7 +31,7 @@ UniqueArray<Element,Compare>:: UniqueArray(const UniqueArray & other): max_size(
 template <class Element, class Compare >
 UniqueArray<Element,Compare>:: ~UniqueArray(){
     for(unsigned int  i=0;i<max_size;i++){
-        //need to check if data[i]!=NUll?
+        //need to check if data[i]!=nullptr?
         delete data[i];
     }
     delete [] data;
@@ -45,7 +45,7 @@ unsigned int UniqueArray<Element,Compare>::  insert(const Element& element){
     }
     // element doesn't exists in the UniqueArray
     for(unsigned int i=0;i<max_size;i++){
-        if(data[i]==NULL) {    //ask
+        if(data[i]==nullptr) {    //ask
             data[i]=new Element(element);
             return i;
         }
@@ -62,7 +62,7 @@ template <class Element, class Compare >
 bool UniqueArray<Element,Compare>::getIndex(const Element& element, unsigned int& index) const{
     Compare c;
     for(unsigned int i=0;i<max_size;i++){
-        if(data[i]!=NULL) {
+        if(data[i]!=nullptr) {
             if (c(*data[i], element)) {
                 index = i;
                 return true;
@@ -77,13 +77,13 @@ template <class Element, class Compare >
 const Element* UniqueArray<Element,Compare>::operator[] (const Element& element) const{
     Compare c;
     for(unsigned int i=0;i<max_size;i++){
-        if(data[i]!=NULL) {
+        if(data[i]!=nullptr) {
             if (c(*data[i], element)) {//need to use the compare class and not sure if it will work
                 return data[i];
             }
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 
@@ -92,7 +92,7 @@ bool UniqueArray<Element,Compare>:: remove(const Element& element){
     unsigned int index=0;
     if(getIndex(element,index)){
         delete data[index];
-        data[index]=NULL;
+        data[index]=nullptr;
         return true;
     }
     return false;
@@ -102,7 +102,7 @@ template <class Element, class Compare >
 unsigned int UniqueArray<Element,Compare>::  getCount() const{
     unsigned int count=0;
     for(unsigned int  i=0;i<max_size;i++){
-        if(data[i]!=NULL){
+        if(data[i]!=nullptr){
             count++;
         }
 
@@ -120,12 +120,12 @@ template <class Element, class Compare >
 UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(const Filter& f) const{
     UniqueArray filterd_array(max_size);
     for(unsigned int  i=0;i<max_size;i++){
-        if(data[i]!=NULL) {
+        if(data[i]!=nullptr) {
             if (f.operator()(*data[i])) {
                 filterd_array.data[i] = new Element(*data[i]);
-            }else(filterd_array.data[i]=NULL);
+            }else(filterd_array.data[i]=nullptr);
         }else{
-            filterd_array.data[i]=NULL;
+            filterd_array.data[i]=nullptr;
         }
     }
 

@@ -275,7 +275,7 @@ namespace MtmParkingLot {
         if(exists!=nullptr){
             //getParkingSpot(licensePlate,spot);
             spot=(*exists).getVehicleParkingSpot();
-            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
+            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,(*exists).getEntranceTime());
             ParkingLotPrinter::printEntryFailureAlreadyParked(cout,spot);
             return VEHICLE_ALREADY_PARKED;
         }
@@ -390,7 +390,7 @@ namespace MtmParkingLot {
 
         UniqueArray<Vehicle,Compare> uq_filtered((wanted_uq.filter(inspection)));
         for(unsigned int i=0;i<wanted_uq.getSize();i++){
-            if((uq_filtered.getElement(i))!=NULL){
+            if((uq_filtered.getElement(i))!=nullptr){
                 (*(wanted_uq.getElement(i))).setGotFined();
             }
 
