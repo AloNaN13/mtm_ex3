@@ -31,7 +31,6 @@ const int FINE = 250;
 
 
 
-
 namespace MtmParkingLot {
 
     using namespace ParkingLotUtils;
@@ -52,12 +51,12 @@ namespace MtmParkingLot {
 
         Vehicle();
         explicit Vehicle(LicensePlate& plate_number);
-        Vehicle(LicensePlate &plate_number, VehicleType type, Time time);
+        Vehicle(LicensePlate& plate_number, VehicleType type, Time& time);
         ~Vehicle() = default;
         Vehicle(const Vehicle& other) = default;
         Vehicle& operator=(const Vehicle&) = default;
         VehicleType getType() const{ return vehicle_type;}
-        bool operator== (const Vehicle &v1)const;
+        bool operator== (const Vehicle& v1)const;
         bool operator<(const Vehicle& v1)const{return parkingSpot<v1.parkingSpot;}
         bool getIfVehicleIsFined() const{return got_fined;}
         void setGotFined(){got_fined= true;}
@@ -72,16 +71,16 @@ namespace MtmParkingLot {
 
     Vehicle:: Vehicle() :
         license_plate("DEFAULT"), vehicle_type(FIRST),
-        time_of_entrance(0, 0, 0), got_fined(false) {}
+        time_of_entrance(0, 0, 0), got_fined(false), parkingSpot(MOTORBIKE, 0) {}
 
     Vehicle:: Vehicle(LicensePlate &plate_number) :
         license_plate(plate_number), vehicle_type(FIRST),
-        time_of_entrance(0, 0, 0), got_fined(false) {
+        time_of_entrance(0, 0, 0), got_fined(false), parkingSpot(MOTORBIKE, 0) {
     }
 
-    Vehicle:: Vehicle(LicensePlate &plate_number, VehicleType type, Time time) :
+    Vehicle:: Vehicle(LicensePlate &plate_number, VehicleType type, Time& time) :
         license_plate(plate_number), vehicle_type(type),
-        time_of_entrance(time), got_fined(false) {
+        time_of_entrance(time), got_fined(false), parkingSpot(MOTORBIKE, 0){
     }
     bool Vehicle::operator==(const Vehicle &v1) const {
         return license_plate==v1.license_plate;
@@ -118,10 +117,10 @@ namespace MtmParkingLot {
     private:
     Time inspectionTime;
     public:
-        explicit MoreThan24Hours(Time inspection):inspectionTime(inspection){}
+        explicit MoreThan24Hours(Time& inspection):inspectionTime(inspection){}
         ~MoreThan24Hours()= default;
-        MoreThan24Hours(const MoreThan24Hours&other)= delete;
-        MoreThan24Hours&operator=(const MoreThan24Hours&other)= delete;
+        MoreThan24Hours(const MoreThan24Hours& other)= delete;
+        MoreThan24Hours&operator=(const MoreThan24Hours& other)= delete;
 
         bool operator()(const Vehicle& vehicle)const override{
             Time totalHours=inspectionTime-vehicle.getEntranceTime();
@@ -136,10 +135,10 @@ namespace MtmParkingLot {
         UniqueArray <Vehicle,Compare> handicapped_cars_arr;
         UniqueArray <Vehicle,Compare> cars_arr;
 
-        const Vehicle* getVehicleFromLicensePlate(LicensePlate licensePlate)const;
-        bool checkIfExistsSpot(const VehicleType vehicleType);
-        void enterVehicleToParking(Vehicle &register_vehicle,const VehicleType vehicleType);
-        static int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
+        const Vehicle* getVehicleFromLicensePlate(LicensePlate& licensePlate)const;
+        bool checkIfExistsSpot(VehicleType vehicleType);
+        void enterVehicleToParking(Vehicle &register_vehicle, VehicleType vehicleType);
+        static int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time& exit_time);
         static unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime);
         static void enterVehiclesToVectorFromArray(std::vector<Vehicle>& parking_lot_vector
                                 ,const UniqueArray<Vehicle,Compare>& wanted_uq) ;
@@ -164,7 +163,7 @@ namespace MtmParkingLot {
         * @return pointer to the wanted vehicle if such exists
         * @return NULL-otherwise
         */
-    const Vehicle* ParkingLot::getVehicleFromLicensePlate(LicensePlate licensePlate)const{
+    const Vehicle* ParkingLot::getVehicleFromLicensePlate(LicensePlate& licensePlate)const{
         Vehicle new_vehicle(licensePlate);
         const Vehicle* exists = motorbikes_arr[new_vehicle];
         if(exists!=nullptr){
@@ -186,7 +185,7 @@ namespace MtmParkingLot {
          * @return true- if there is a free spot for a vehicle with the given VT
          * @return false- if there isn't such a spot
          */
-    bool ParkingLot:: checkIfExistsSpot(const VehicleType vehicleType){
+    bool ParkingLot:: checkIfExistsSpot(VehicleType vehicleType){
         if(vehicleType==MOTORBIKE){
             return motorbikes_arr.getCount() != motorbikes_arr.getSize();
         }
@@ -203,8 +202,8 @@ namespace MtmParkingLot {
          * @param register_vehicle-the vehicle we should enter
          * @param vehicleType-the VehicleType of the vehicle
          */
-    void MtmParkingLot::ParkingLot:: enterVehicleToParking(Vehicle& register_vehicle, const VehicleType vehicleType){
-        unsigned int index;
+    void MtmParkingLot::ParkingLot:: enterVehicleToParking(Vehicle& register_vehicle, VehicleType vehicleType){
+        unsigned int index = 0;
 
         if(vehicleType==MOTORBIKE){
             index = motorbikes_arr.insert(register_vehicle);
@@ -233,7 +232,7 @@ namespace MtmParkingLot {
         * return- the amount the vehicle should pay at exit, considering its type
         * ,hours of stay and if it got fined
         */
-    int ParkingLot::getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time){
+    int ParkingLot::getPriceForVehicleAtExit(const Vehicle& vehicle,const Time& exit_time){
         int price=ZERO_PRICE;
         Time total_stay_time=exit_time-vehicle.getEntranceTime();
         int total_hours=total_stay_time.toHours();

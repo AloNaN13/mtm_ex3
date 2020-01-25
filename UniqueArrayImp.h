@@ -59,10 +59,10 @@ unsigned int UniqueArray<Element,Compare>::  insert(const Element& element){
 
 template <class Element, class Compare >
 bool UniqueArray<Element,Compare>::getIndex(const Element& element, unsigned int& index) const{
-    Compare c;
+    Compare compare;
     for(unsigned int i=0;i<max_size;i++){
         if(data[i]!=nullptr) {
-            if (c(*data[i], element)) {
+            if (compare(*data[i], element)) {
                 index = i;
                 return true;
             }
@@ -74,10 +74,10 @@ bool UniqueArray<Element,Compare>::getIndex(const Element& element, unsigned int
 
 template <class Element, class Compare >
 const Element* UniqueArray<Element,Compare>::operator[] (const Element& element) const{
-    Compare c;
+    Compare compare;
     for(unsigned int i=0;i<max_size;i++){
         if(data[i]!=nullptr) {
-            if (c(*data[i], element)) {
+            if (compare(*data[i], element)) {
                 return data[i];
             }
         }
