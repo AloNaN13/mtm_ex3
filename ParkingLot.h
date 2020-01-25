@@ -376,7 +376,7 @@ namespace MtmParkingLot {
             return SUCCESS;
         }
         //value= Handicapped
-        else if(handicapped_cars_arr.getIndex(*exists,index)){//the car is in handicapped
+        else if(handicapped_cars_arr.getIndex(*exists,index) == true){//the car is in handicapped
             handicapped_cars_arr.remove(*exists);
             ParkingLotPrinter::printExitSuccess(cout,parking_spot,exitTime,price);
             return SUCCESS;
