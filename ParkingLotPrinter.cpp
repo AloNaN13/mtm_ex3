@@ -20,7 +20,7 @@ namespace ParkingLotUtils {
     }
 
     ostream& ParkingLotPrinter::printEntryFailureNoSpot(ostream& os) {
-        return os << " failed entering Parking Lot : no available parking spot!" << endl;
+        return os << " failed entering Parking Lot : no available parking spot!" <<endl;
     }
 
     ostream& ParkingLotPrinter::printEntryFailureAlreadyParked(ostream& os, ParkingSpot parkingSpot) {
