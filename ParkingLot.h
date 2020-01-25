@@ -289,10 +289,11 @@ namespace MtmParkingLot {
         int count=0;
         for(unsigned int i=0;i<wanted_uq.getSize();i++){
             if((uq_filtered.getElement(i))!=nullptr){
+                if(!(*(wanted_uq.getElement(i))).getIfVehicleIsFined()){
+                    count++;
+                }
                 (*(wanted_uq.getElement(i))).setGotFined();
-                count++;
             }
-
         }
         return count;
         return uq_filtered.getCount();
