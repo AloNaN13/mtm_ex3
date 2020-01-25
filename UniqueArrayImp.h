@@ -77,7 +77,7 @@ const Element* UniqueArray<Element,Compare>::operator[] (const Element& element)
     Compare c;
     for(unsigned int i=0;i<max_size;i++){
         if(data[i]!=nullptr) {
-            if (c(*data[i], element)) {//need to use the compare class and not sure if it will work
+            if (c(*data[i], element)) {
                 return data[i];
             }
         }

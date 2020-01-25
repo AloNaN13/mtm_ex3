@@ -99,7 +99,7 @@ namespace MtmParkingLot {
         Compare()= default;
         ~Compare()= default;
         Compare(const Compare& other)=delete;
-        Compare&operator=(const Compare& other)=delete;
+        Compare& operator=(const Compare& other)=delete;
 
 
 
@@ -138,11 +138,11 @@ namespace MtmParkingLot {
 
         const Vehicle* getVehicleFromLicensePlate(LicensePlate licensePlate)const;
         bool checkIfExistsSpot(const VehicleType vehicleType);
-        void enterVehicleToParking(Vehicle &register_vehicle,const VehicleType vehicle_type);
+        void enterVehicleToParking(Vehicle &register_vehicle,const VehicleType vehicleType);
         static int getPriceForVehicleAtExit(const Vehicle& vehicle,const Time exit_time);
-        unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime);
-        void enterVehiclesToVectorFroArray(std::vector<Vehicle>& parking_lot_vector
-                                ,const UniqueArray<Vehicle,Compare>& wanted_uq)const ;
+        static unsigned int filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime);
+        static void enterVehiclesToVectorFromArray(std::vector<Vehicle>& parking_lot_vector
+                                ,const UniqueArray<Vehicle,Compare>& wanted_uq) ;
 
     public:
         explicit ParkingLot(unsigned int parkingBlockSizes[]);
@@ -299,8 +299,8 @@ namespace MtmParkingLot {
       * the vector
       */
 
-    void ParkingLot::enterVehiclesToVectorFroArray(std::vector<Vehicle>&
-    parking_lot_vector,const UniqueArray<Vehicle,Compare>& wanted_uq)const {
+    void ParkingLot::enterVehiclesToVectorFromArray(std::vector<Vehicle>&
+    parking_lot_vector,const UniqueArray<Vehicle,Compare>& wanted_uq) {
         for(unsigned int i=0; i <wanted_uq.getSize(); i++){
             if(wanted_uq.getElement(i)!=nullptr) {
                 parking_lot_vector.push_back(*(wanted_uq.getElement(i)));
@@ -374,7 +374,7 @@ namespace MtmParkingLot {
             return SUCCESS;
         }
         //value= Handicapped
-        else if(handicapped_cars_arr.getIndex(*exists,index) == true){//the car is in handicapped
+        else if(handicapped_cars_arr.getIndex(*exists, index)){//the car is in handicapped
             handicapped_cars_arr.remove(*exists);
             ParkingLotPrinter::printExitSuccess(cout,parking_spot,exitTime,price);
             return SUCCESS;
@@ -401,10 +401,15 @@ namespace MtmParkingLot {
         ParkingLotPrinter::printParkingLotTitle(os);
 
         std::vector<Vehicle> parking_lot_vector;
-        parkingLot.enterVehiclesToVectorFroArray(parking_lot_vector,parkingLot.motorbikes_arr);
-        parkingLot.enterVehiclesToVectorFroArray(parking_lot_vector,parkingLot.handicapped_cars_arr);
-        parkingLot.enterVehiclesToVectorFroArray(parking_lot_vector,parkingLot.cars_arr);
+        //insert vehicles to the vector
+        parkingLot.enterVehiclesToVectorFromArray(parking_lot_vector,parkingLot.motorbikes_arr);
+        parkingLot.enterVehiclesToVectorFromArray(parking_lot_vector,parkingLot.handicapped_cars_arr);
+        parkingLot.enterVehiclesToVectorFromArray(parking_lot_vector,parkingLot.cars_arr);
+
+        //sorting the vehicle
         std::sort(parking_lot_vector.begin(), parking_lot_vector.end());
+
+        //printing the vector
         for(unsigned int j = 0; j < parking_lot_vector.size(); j++) {
             ParkingLotPrinter::printVehicle(os, parking_lot_vector[j].getType(),
                                             parking_lot_vector[j].getLicensePlate(),
@@ -415,10 +420,7 @@ namespace MtmParkingLot {
         }
         return os;
     }
-    // see if i can make this function better
-    // try to write it differently while no vector_size
-    // try with only parkingSpot?
-    // try the for loop with iterator?
+
 }
 
 
