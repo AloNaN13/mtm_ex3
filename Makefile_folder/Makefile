@@ -1,6 +1,5 @@
 CC = g++
 OBJS = MtmParkingLot.o ParkingSpot.o ParkingLotPrinter.o Time.o
-#Vehicle.o
 EXEC = MtmParkingLot
 DEBUG_FLAG = -g
 COMP_FLAG = -std=c++11 -Wall -Werror -pedantic-errors -DNDEBUG
@@ -19,9 +18,6 @@ MtmParkingLot.o : MtmParkingLot.cpp ParkingLot.h UniqueArray.h UniqueArrayImp.h
 ParkingSpot.o : ParkingSpot.h ParkingSpot.cpp
 	$(CC) $(COMP_FLAG) -c  $(DEBUG_FLAG) ParkingSpot.cpp
 
-#Vehicle.o : Vehicle.h Vehicle.cpp
-#	$(CC) $(COMP_FLAG) -c  $(DEBUG_FLAG) Vehicle.cpp
-
 ParkingLotPrinter.o : ParkingLotPrinter.h ParkingLotPrinter.cpp
 	$(CC) $(COMP_FLAG) -c  $(DEBUG_FLAG) ParkingLotPrinter.cpp
 
@@ -31,7 +27,3 @@ Time.o : Time.h Time.cpp
 
 clean:
 	rm -f $(OBJS)
-
-
-
-# tests/unique array?
