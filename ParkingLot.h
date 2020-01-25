@@ -186,11 +186,11 @@ namespace MtmParkingLot {
             return motorbikes_arr.getCount() != motorbikes_arr.getSize();
         }
         if(vehicleType==HANDICAPPED){
-            if(handicapped_cars_arr.getCount()!=handicapped_cars_arr.getCount()){
+            if(handicapped_cars_arr.getCount()!=handicapped_cars_arr.getSize()){
                 return true;
             }
         }
-        return cars_arr.getSize() != cars_arr.getCount();
+        return (cars_arr.getSize() != cars_arr.getCount());
     }
     /**
          * @brief enters a vehicle to the parking lot
@@ -286,12 +286,15 @@ namespace MtmParkingLot {
 
 
         UniqueArray<Vehicle,Compare> uq_filtered((wanted_uq.filter(inspection)));
+        int count=0;
         for(unsigned int i=0;i<wanted_uq.getSize();i++){
             if((uq_filtered.getElement(i))!=nullptr){
                 (*(wanted_uq.getElement(i))).setGotFined();
+                count++;
             }
 
         }
+        return count;
         return uq_filtered.getCount();
     }
 
@@ -331,7 +334,7 @@ namespace MtmParkingLot {
             return VEHICLE_ALREADY_PARKED;
         }
 
-        if(!checkIfExistsSpot(vehicleType)){
+        if(checkIfExistsSpot(vehicleType)== false){
             ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
             ParkingLotPrinter::printEntryFailureNoSpot(cout);
             return NO_EMPTY_SPOT;
