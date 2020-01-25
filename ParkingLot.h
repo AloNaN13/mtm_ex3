@@ -37,8 +37,7 @@ namespace MtmParkingLot {
     using namespace ParkingLotUtils;
     using std::ostream;
     using std::cout;
-    //using std::vector;
-    //using std::sort;
+
 
 
 
@@ -53,62 +52,55 @@ namespace MtmParkingLot {
         VehicleType vehicle_type;
         Time time_of_entrance;
         bool got_fined;
-
         ParkingSpot parkingSpot;
 
 
     public:
 
-        explicit Vehicle();
-        explicit Vehicle(LicensePlate plate_number);
-        Vehicle(LicensePlate plate_number, VehicleType type, Time time);
+        Vehicle();
+        explicit Vehicle(LicensePlate& plate_number);
+        Vehicle(LicensePlate &plate_number, VehicleType type, Time time);
         ~Vehicle() = default;
         Vehicle(const Vehicle& other) = default;
         Vehicle& operator=(const Vehicle&) = default;
-        VehicleType getType() const ;
+        VehicleType getType() const{ return vehicle_type;} ;
         bool operator== (const Vehicle &v1)const;
-        bool operator<(const Vehicle& v1)const{
-            return parkingSpot<v1.parkingSpot;
-        };
-        bool getIfVehicleIsFined() const{
-            return got_fined;
-        }
-        void setGotFined(){
-            got_fined= true;
-        }
-        LicensePlate getLicensePlate() const{
-            return license_plate;
-        };
+        bool operator<(Vehicle& v1){return parkingSpot<v1.parkingSpot;};
+        bool getIfVehicleIsFined() const{return got_fined;}
+        void setGotFined(){got_fined= true;}
+        LicensePlate getLicensePlate() const{return license_plate;};
         ParkingSpot getVehicleParkingSpot()const { return parkingSpot;};
         void setParkingSpot(ParkingSpot parkingSpot_to_set){
-            this->parkingSpot=parkingSpot_to_set;
+            parkingSpot=parkingSpot_to_set;
         };
-        Time getEntranceTime()const {
-            return time_of_entrance;
-        };
-
+        Time getEntranceTime()const{return time_of_entrance;};
 
     };
 
     Vehicle:: Vehicle() :
-        license_plate("DEFAULT"), vehicle_type(FIRST), time_of_entrance(0, 0, 0), got_fined(false) {}
+        license_plate("DEFAULT"), vehicle_type(FIRST),
+        time_of_entrance(0, 0, 0), got_fined(false) {};
 
-    Vehicle:: Vehicle(LicensePlate plate_number) :
-        license_plate(plate_number), vehicle_type(FIRST), time_of_entrance(0, 0, 0), got_fined(false) {
+    Vehicle:: Vehicle(LicensePlate &plate_number) :
+        license_plate(plate_number), vehicle_type(FIRST),
+        time_of_entrance(0, 0, 0), got_fined(false) {
     }
 
-    Vehicle:: Vehicle(LicensePlate plate_number, VehicleType type, Time time) :
-        license_plate(plate_number), vehicle_type(type), time_of_entrance(time), got_fined(false) {
-    }
-
-    VehicleType Vehicle:: getType() const {
-        return this->vehicle_type;
+    Vehicle:: Vehicle(LicensePlate &plate_number, VehicleType type, Time time) :
+        license_plate(plate_number), vehicle_type(type),
+        time_of_entrance(time), got_fined(false) {
     }
     bool Vehicle::operator==(const Vehicle &v1) const {
         return license_plate==v1.license_plate;
     }
 
-
+    /**
+        *The class that wii be sent to the UniqueArray template, and will
+        * be used there as the compare function
+        * the operator () will return if v1==v2 (using the == of vehicle)
+        * that will return if the license plate of v1==license plate of v2
+        * (using the operator == of String)
+        */
     class Compare {
     public:
         bool operator() (const Vehicle& v1, const Vehicle &v2){
@@ -116,7 +108,12 @@ namespace MtmParkingLot {
         }
     };
 
-
+    /**
+        *The class that wii be used as the filter in the filter function
+        * at UniqueArray
+        * the operator () will return if at the time of the inspection
+        * the vehicle stayed more than 24 hours
+        */
     class MoreThan24Hours :public UniqueArray<Vehicle,Compare>::Filter{
     private:
     Time inspectionTime;
@@ -128,7 +125,6 @@ namespace MtmParkingLot {
 
         }
     };
-
 
     class ParkingLot {
     private:
@@ -153,44 +149,16 @@ namespace MtmParkingLot {
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
         void inspectParkingLot(Time inspectionTime);
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
-
-
-
-
-
-
-
-        // exceptions class
-
     };
 
-    ParkingLot:: ParkingLot(unsigned int parkingBlockSizes[]) :
-            motorbikes_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[FIRST_BLOCK_SIZES_INDEX])),
-            handicapped_cars_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[SECOND_BLOCK_SIZES_INDEX])),
-            cars_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[LAST_BLOCK_SIZES_INDEX])){
-
-        //exceptions
-
-    }
-
-    ParkingResult ParkingLot:: getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const {
-        const Vehicle* vehicle_in_arr = getVehicleFromLicensePlate(licensePlate);
-        if(vehicle_in_arr != nullptr) {
-            // get parking block, get parking number, put it in parkingSpot
-            parkingSpot = (*vehicle_in_arr).getVehicleParkingSpot();
-            return SUCCESS;
-        }
-        return VEHICLE_NOT_FOUND;
-    }
-
     /**
-         * @brief returns a pointer to a vehicle in the parking lot with
-         * the same license plate as the given to the function
-         *
-         * @param licensePlate- the wanted licenseplate
-         * @return pointer to the wanted vehicle if such exists
-         * @return NULL-otherwise
-         */
+        * @brief returns a pointer to a vehicle in the parking lot with
+        * the same license plate as the given to the function
+        *
+        * @param licensePlate- the wanted licenseplate
+        * @return pointer to the wanted vehicle if such exists
+        * @return NULL-otherwise
+        */
     const Vehicle* ParkingLot::getVehicleFromLicensePlate(LicensePlate licensePlate)const{
         Vehicle new_vehicle(licensePlate);
         const Vehicle* exists = motorbikes_arr[new_vehicle];
@@ -213,7 +181,6 @@ namespace MtmParkingLot {
          * @return true- if there is a free spot for a vehicle with the given VT
          * @return false- if there isn't such a spot
          */
-
     bool ParkingLot:: checkIfExistsSpot(const VehicleType vehicleType){
         if(vehicleType==MOTORBIKE){
             return motorbikes_arr.getCount() != motorbikes_arr.getSize();
@@ -226,8 +193,6 @@ namespace MtmParkingLot {
 
         return cars_arr.getSize() != cars_arr.getCount();
     }
-
-
     /**
          * @brief enters a vehicle to the parking lot
          *
@@ -264,38 +229,6 @@ namespace MtmParkingLot {
         register_vehicle.setParkingSpot(ParkingSpot(vt, index));
         (*handicapped_cars_arr.getElement(index)).setParkingSpot(register_vehicle.getVehicleParkingSpot());
         return true;
-    }
-
-    ParkingLotUtils:: ParkingResult ParkingLot:: enterParking(VehicleType vehicleType,
-            LicensePlate licensePlate, Time entranceTime){
-        Vehicle new_vehicle(licensePlate,vehicleType,entranceTime);
-
-        ParkingSpot spot;
-        const Vehicle* exists= getVehicleFromLicensePlate(licensePlate);
-        if(exists!=nullptr){
-            //getParkingSpot(licensePlate,spot);
-            spot=(*exists).getVehicleParkingSpot();
-            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,(*exists).getEntranceTime());
-            ParkingLotPrinter::printEntryFailureAlreadyParked(cout,spot);
-            return VEHICLE_ALREADY_PARKED;
-        }
-
-        if(!checkIfExistsSpot(vehicleType)){
-            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
-            ParkingLotPrinter::printEntryFailureNoSpot(cout);
-            return NO_EMPTY_SPOT;
-        }
-        if(!enterVehicleToParking(new_vehicle,vehicleType)){
-            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
-            ParkingLotPrinter::printEntryFailureNoSpot(cout);
-            return NO_EMPTY_SPOT;
-        }
-        //insers was succesfull
-
-        spot=new_vehicle.getVehicleParkingSpot();
-        ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
-        ParkingLotPrinter::printEntrySuccess(cout,spot);
-        return SUCCESS;
     }
 
     /**
@@ -338,6 +271,86 @@ namespace MtmParkingLot {
     }
 
 
+    /**
+       * @brief filters the vehicles that are over 24 hours and sets the
+       * the got_fined of the vehicle accordenly
+       *
+       * @param vehicle-the wanted vehicle
+       * @param exit_time-the exit time of the given vehicle from the parking_lot
+       *
+       * return- the amount vehicles that passed the filter (meaning-are over
+       * 24 hours)
+       */
+    unsigned int ParkingLot::filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime){
+        MoreThan24Hours inspection(inspectionTime);
+
+
+        UniqueArray<Vehicle,Compare> uq_filtered((wanted_uq.filter(inspection)));
+        for(unsigned int i=0;i<wanted_uq.getSize();i++){
+            if((uq_filtered.getElement(i))!=nullptr){
+                (*(wanted_uq.getElement(i))).setGotFined();
+            }
+
+        }
+        return uq_filtered.getCount();
+    }
+
+
+
+
+
+
+
+    ParkingLot:: ParkingLot(unsigned int parkingBlockSizes[]) :
+            motorbikes_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[FIRST_BLOCK_SIZES_INDEX])),
+            handicapped_cars_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[SECOND_BLOCK_SIZES_INDEX])),
+            cars_arr ( UniqueArray<Vehicle,Compare>(parkingBlockSizes[LAST_BLOCK_SIZES_INDEX])){
+    }
+
+    ParkingResult ParkingLot:: getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const {
+        const Vehicle* vehicle_in_arr = getVehicleFromLicensePlate(licensePlate);
+        if(vehicle_in_arr != nullptr) {
+            // get parking block, get parking number, put it in parkingSpot
+            parkingSpot = (*vehicle_in_arr).getVehicleParkingSpot();
+            return SUCCESS;
+        }
+        return VEHICLE_NOT_FOUND;
+    }
+
+    ParkingLotUtils:: ParkingResult ParkingLot:: enterParking(VehicleType vehicleType,
+            LicensePlate licensePlate, Time entranceTime){
+        Vehicle new_vehicle(licensePlate,vehicleType,entranceTime);
+
+        ParkingSpot spot;
+        const Vehicle* exists= getVehicleFromLicensePlate(licensePlate);
+        if(exists!=nullptr){
+            //getParkingSpot(licensePlate,spot);
+            spot=(*exists).getVehicleParkingSpot();
+            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,(*exists).getEntranceTime());
+            ParkingLotPrinter::printEntryFailureAlreadyParked(cout,spot);
+            return VEHICLE_ALREADY_PARKED;
+        }
+
+        if(!checkIfExistsSpot(vehicleType)){
+            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
+            ParkingLotPrinter::printEntryFailureNoSpot(cout);
+            return NO_EMPTY_SPOT;
+        }
+        if(!enterVehicleToParking(new_vehicle,vehicleType)){
+            ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
+            ParkingLotPrinter::printEntryFailureNoSpot(cout);
+            return NO_EMPTY_SPOT;
+        }
+        //insers was succesfull
+
+        spot=new_vehicle.getVehicleParkingSpot();
+        ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
+        ParkingLotPrinter::printEntrySuccess(cout,spot);
+        return SUCCESS;
+    }
+
+
+
     ParkingLotUtils:: ParkingResult ParkingLot::
     exitParking(LicensePlate licensePlate, Time exitTime){
         const Vehicle* exists= getVehicleFromLicensePlate(licensePlate);
@@ -356,7 +369,6 @@ namespace MtmParkingLot {
             motorbikes_arr.remove(*exists);
             ParkingLotPrinter::printExitSuccess(cout,parking_spot,exitTime,price);
             return SUCCESS;
-            //assert success
         }else if(parking_spot.getParkingBlock()==CAR){
             cars_arr.remove(*exists);
             ParkingLotPrinter::printExitSuccess(cout,parking_spot,exitTime,price);
@@ -376,27 +388,6 @@ namespace MtmParkingLot {
         return SUCCESS;
     }
 
-    /**
-        * @brief filters the vehicles at the given u
-        *
-        * @param vehicle-the wanted vehicle
-        * @param exit_time-the exit time of the given vehicle from the parking_lot
-        *
-        * return- the amount vehicles that passed the filter
-        */
-    unsigned int ParkingLot::filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime){
-        MoreThan24Hours inspection(inspectionTime);
-
-
-        UniqueArray<Vehicle,Compare> uq_filtered((wanted_uq.filter(inspection)));
-        for(unsigned int i=0;i<wanted_uq.getSize();i++){
-            if((uq_filtered.getElement(i))!=nullptr){
-                (*(wanted_uq.getElement(i))).setGotFined();
-            }
-
-        }
-        return uq_filtered.getCount();
-    }
 
     void ParkingLot::inspectParkingLot(Time inspectionTime){
         MoreThan24Hours inspection(inspectionTime);
@@ -408,24 +399,10 @@ namespace MtmParkingLot {
 
     }
 
-    /*
-    const bool ParkingLot:: CompareParkingSpots(Vehicle& vehicle1, Vehicle& vehicle2) const {
-        ParkingSpot parking_spot_1, parking_spot_2;
-        ParkingLot::getParkingSpot(vehicle1.getLicensePlate(), parking_spot_1);
-        ParkingLot::getParkingSpot(vehicle2.getLicensePlate(), parking_spot_2);
-        return (parking_spot_1 < parking_spot_2);
-    };
-    */
 
     ostream& operator<<(ostream& os, const ParkingLot& parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(os);
-        // create a new array with all of the vehicles and sort them in it?
-        /*
-        unsigned int motorbikes = parkingLot.motorbikes_arr.getCount();
-        unsigned  int handicapped = parkingLot.handicapped_cars_arr.getCount();
-        unsigned  int cars = parkingLot.cars_arr.getCount();
-        unsigned int vector_size = motorbikes + handicapped + cars;
-        */
+
 
         std::vector<Vehicle> parking_lot_vector;
         for(unsigned int i=0; i < parkingLot.motorbikes_arr.getSize(); i++){
@@ -444,7 +421,6 @@ namespace MtmParkingLot {
             }
         }
         std::sort(parking_lot_vector.begin(), parking_lot_vector.end());
-
         // for the array:
         for(unsigned int j = 0; j < parking_lot_vector.size(); j++) {
             ParkingLotPrinter::printVehicle(os, parking_lot_vector[j].getType(),
@@ -454,16 +430,12 @@ namespace MtmParkingLot {
             parkingLot.getParkingSpot(parking_lot_vector[j].getLicensePlate(), parking_spot);
             ParkingLotPrinter::printParkingSpot(os, parking_spot);
         }
-
-
         return os;
     }
     // see if i can make this function better
     // try to write it differently while no vector_size
     // try with only parkingSpot?
     // try the for loop with iterator?
-
-
 }
 
 

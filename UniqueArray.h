@@ -11,7 +11,7 @@ private:
 
 public:
 
-    UniqueArray(unsigned int size);
+    explicit UniqueArray(unsigned int size);
     UniqueArray(const UniqueArray& other);
     ~UniqueArray();
     UniqueArray& operator=(const UniqueArray&) = delete;
@@ -22,6 +22,10 @@ public:
     unsigned int getCount() const;
     unsigned int getSize() const;
 
+
+    /** getElement: returns a pointer to the element with the given index
+     * in the uniqueArray. there are 2 versions, one for const and one without
+     */
     Element* getElement(unsigned int index) {return data[index];}
     const Element* getElement(unsigned int index) const {return data[index];}
 
