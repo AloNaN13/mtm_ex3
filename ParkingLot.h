@@ -267,7 +267,7 @@ namespace MtmParkingLot {
         }
         if(vt==CAR||handicapped_cars_arr.getCount()==handicapped_cars_arr.getSize()){
             index=cars_arr.insert(register_vehicle);
-            register_vehicle.setParkingSpot(ParkingSpot(vt,index));
+            register_vehicle.setParkingSpot(ParkingSpot(CAR,index));
             (*cars_arr.getElement(index)).setParkingSpot(register_vehicle.getVehicleParkingSpot());
             return true;
         }
@@ -275,57 +275,6 @@ namespace MtmParkingLot {
         register_vehicle.setParkingSpot(ParkingSpot(vt,index));
         (*handicapped_cars_arr.getElement(index)).setParkingSpot(register_vehicle.getVehicleParkingSpot());
         return true;
-
-
-
-
-        /*if(vt==MOTORBIKE){
-            try{
-                int num=motorbikes_arr.insert(register_vehicle);
-                ParkingSpot spot(MOTORBIKE,num);
-                register_vehicle.setParkingSpot(spot);
-                motorbikes_arr.remove(register_vehicle);
-                motorbikes_arr.insert(register_vehicle);
-                //(*motorbikes_arr.getElement(num)).setParkingSpot(spot);
-            }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
-                return false;
-            }
-            return true;
-        }else if(vt==HANDICAPPED){
-            try{
-                int num=handicapped_cars_arr.insert(register_vehicle);
-                ParkingSpot spot(HANDICAPPED,num);
-                register_vehicle.setParkingSpot(spot);
-
-                handicapped_cars_arr.remove(register_vehicle);
-                handicapped_cars_arr.insert(register_vehicle);
-                //(*handicapped_cars_arr.getElement(num)).setParkingSpot(spot);
-            }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
-                try{
-                    int num=cars_arr.insert(register_vehicle);
-                    ParkingSpot spot(CAR,num);
-                    register_vehicle.setParkingSpot(spot);
-                    cars_arr.remove(register_vehicle);
-                    cars_arr.insert(register_vehicle);
-                    //(*cars_arr.getElement(num)).setParkingSpot(spot);
-                }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
-                    return false;
-                }
-                return true;
-            }
-        }else {
-            try{
-                int num=cars_arr.insert(register_vehicle);
-                ParkingSpot spot(CAR,num);
-                register_vehicle.setParkingSpot(spot);
-                cars_arr.remove(register_vehicle);
-                cars_arr.insert(register_vehicle);
-                //(*cars_arr.getElement(num)).setParkingSpot(spot);
-            }catch (UniqueArray<Vehicle,Compare>::UniqueArrayIsFullException){
-                return false;
-            }
-        }
-        return true;*/
     }
 
     ParkingLotUtils:: ParkingResult ParkingLot:: enterParking(VehicleType vehicleType,
@@ -465,7 +414,6 @@ namespace MtmParkingLot {
     void ParkingLot::inspectParkingLot(Time inspectionTime){
         MoreThan24Hours inspection(inspectionTime);
         unsigned int count_fined=0;
-        //UniqueArray<Vehicle,Compare> motors_filtered =motorbikes_arr.filter(inspection);
         count_fined=count_fined+filterUniqueArray(motorbikes_arr,inspectionTime);
         count_fined=count_fined+filterUniqueArray(cars_arr,inspectionTime);
         count_fined=count_fined+filterUniqueArray(handicapped_cars_arr,inspectionTime);
