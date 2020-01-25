@@ -124,11 +124,18 @@ UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(const Filter&
             if (f.operator()(*data[i])) {
                 filterd_array.data[i] = new Element(*data[i]);
             }else(filterd_array.data[i]=NULL);
-        }else(filterd_array.data[i]=NULL);
+        }else{
+            filterd_array.data[i]=NULL;
+        }
     }
+
     return filterd_array;
 
 }
+
+
+
+
 
 
 

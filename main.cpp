@@ -36,13 +36,22 @@ int main() {
     VehicleType vt_motor=MOTORBIKE;
     VehicleType vt_car=CAR;
     LicensePlate lp0="ABCD";
+    LicensePlate lp3="ROEY";
+    Time t2(1,5,4);
+
     Time t(0,3,2);
     parkingLot.enterParking(MOTORBIKE,lp0,t);
+    parkingLot.enterParking(MOTORBIKE,lp3,t2);
+    parkingLot.enterParking(MOTORBIKE,"DAD",t);
+    //parkingLot.exitParking(lp0,t);
+
+
+
     LicensePlate lp1="RON";
     parkingLot.enterParking(CAR,lp1,t);
     parkingLot.enterParking(CAR,lp1,t);
     parkingLot.enterParking(CAR,"AVITAL",t);
-    Time t2(1,5,4);
+
     parkingLot.inspectParkingLot(t2);
 
 

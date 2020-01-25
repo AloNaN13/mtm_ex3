@@ -125,10 +125,12 @@ namespace MtmParkingLot {
     private:
     Time inspectionTime;
     public:
-        explicit MoreThan24Hours(Time inspectionTime):inspectionTime(inspectionTime){}
+        explicit MoreThan24Hours(Time inspection):inspectionTime(inspection){}
         bool operator()(const Vehicle& vehicle)const override{
             Time totalHours=inspectionTime-vehicle.getEntranceTime();
             return totalHours.toHours()>= HOURS_PER_DAY;
+
+
         }
     };
 
@@ -448,30 +450,23 @@ namespace MtmParkingLot {
         */
     unsigned int ParkingLot::filterUniqueArray(UniqueArray<Vehicle,Compare>& wanted_uq,Time& inspectionTime){
         MoreThan24Hours inspection(inspectionTime);
-        UniqueArray<Vehicle,Compare> uq_filtered =wanted_uq.filter(inspection);
+
+
+        UniqueArray<Vehicle,Compare> uq_filtered((wanted_uq.filter(inspection)));
         for(unsigned int i=0;i<wanted_uq.getSize();i++){
-            printf("inside the for\n");
-            if(!uq_filtered.getElement(i)){
-                printf("inside\n");
-                /*if(wanted_uq.getElement(i)) {
-                    wanted_uq.getElement(i)->setGotFined();
-                }*/
-                (*wanted_uq.getElement(i)).setGotFined();
+            if((uq_filtered.getElement(i))!=NULL){
+                (*(wanted_uq.getElement(i))).setGotFined();
             }
-            printf("after the if\n");
 
         }
-        printf("passed the for\n");
         return uq_filtered.getCount();
     }
 
     void ParkingLot::inspectParkingLot(Time inspectionTime){
         MoreThan24Hours inspection(inspectionTime);
         unsigned int count_fined=0;
-        printf("heyooo\n");
         //UniqueArray<Vehicle,Compare> motors_filtered =motorbikes_arr.filter(inspection);
         count_fined=count_fined+filterUniqueArray(motorbikes_arr,inspectionTime);
-        printf("do you love me\n");
         count_fined=count_fined+filterUniqueArray(cars_arr,inspectionTime);
         count_fined=count_fined+filterUniqueArray(handicapped_cars_arr,inspectionTime);
         ParkingLotPrinter::printInspectionResult(cout,inspectionTime,count_fined);

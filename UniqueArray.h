@@ -6,6 +6,7 @@ template <class Element, class Compare = std::equal_to<Element>>
 class UniqueArray {
 private:
     const unsigned int max_size;
+    //unsigned int max_size;
     Element** data;
 
 public:
