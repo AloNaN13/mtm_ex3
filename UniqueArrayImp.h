@@ -1,11 +1,5 @@
-//
-// Created by User on 1/7/2020.
-//
-
 #ifndef EX3_UNIQUEARRAYIMP_H
 #define EX3_UNIQUEARRAYIMP_H
-
-
 
 template <class Element, class Compare >
 UniqueArray<Element,Compare>:: UniqueArray(unsigned int size) :
@@ -56,9 +50,9 @@ unsigned int UniqueArray<Element,Compare>::  insert(const Element& element){
 
 }
 
-
 template <class Element, class Compare >
-bool UniqueArray<Element,Compare>::getIndex(const Element& element, unsigned int& index) const{
+bool UniqueArray<Element,Compare>::getIndex(const Element& element,
+        unsigned int& index) const{
     Compare compare;
     for(unsigned int i=0;i<max_size;i++){
         if(data[i]!=nullptr) {
@@ -73,7 +67,8 @@ bool UniqueArray<Element,Compare>::getIndex(const Element& element, unsigned int
 }
 
 template <class Element, class Compare >
-const Element* UniqueArray<Element,Compare>::operator[] (const Element& element) const{
+const Element* UniqueArray<Element,Compare>::operator[] (
+        const Element& element) const{
     Compare compare;
     for(unsigned int i=0;i<max_size;i++){
         if(data[i]!=nullptr) {
@@ -84,7 +79,6 @@ const Element* UniqueArray<Element,Compare>::operator[] (const Element& element)
     }
     return nullptr;
 }
-
 
 template <class Element, class Compare >
 bool UniqueArray<Element,Compare>:: remove(const Element& element){
@@ -113,9 +107,9 @@ unsigned int UniqueArray<Element,Compare>::  getSize() const{
     return max_size;
 }
 
-
 template <class Element, class Compare >
-UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(const Filter& f) const{
+UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(
+        const Filter& f) const{
     UniqueArray filterd_array(max_size);
     for(unsigned int  i=0;i<max_size;i++){
         if(data[i]!=nullptr) {
@@ -127,7 +121,6 @@ UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(const Filter&
         }
     }
     return filterd_array;
-
 }
 
 
