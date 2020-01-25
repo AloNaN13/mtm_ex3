@@ -65,7 +65,7 @@ namespace MtmParkingLot {
         Vehicle& operator=(const Vehicle&) = default;
         VehicleType getType() const{ return vehicle_type;} ;
         bool operator== (const Vehicle &v1)const;
-        bool const operator<(Vehicle& v1)const{return parkingSpot<v1.parkingSpot;}
+        bool operator<(const Vehicle& v1)const{return parkingSpot<v1.parkingSpot;}
         bool getIfVehicleIsFined() const{return got_fined;}
         void setGotFined(){got_fined= true;}
         LicensePlate getLicensePlate() const{return license_plate;};
