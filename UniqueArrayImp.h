@@ -52,7 +52,7 @@ unsigned int UniqueArray<Element,Compare>::  insert(const Element& element){
     }
     //array is full
     UniqueArrayIsFullException fullException;
-    throw (fullException);
+    throw fullException;
 
     //exceptions!!!
 }
