@@ -8,7 +8,8 @@
 
 
 template <class Element, class Compare >
-UniqueArray<Element,Compare>:: UniqueArray(unsigned int size) : max_size(size), data(new Element*[size]){
+UniqueArray<Element,Compare>:: UniqueArray(unsigned int size) :
+                                    max_size(size), data(new Element*[size]){
     for(int i=0;i<max_size;i++){
         data[i]=nullptr;
     }
@@ -16,8 +17,8 @@ UniqueArray<Element,Compare>:: UniqueArray(unsigned int size) : max_size(size), 
 }
 
 template <class Element, class Compare >
-UniqueArray<Element,Compare>:: UniqueArray(const UniqueArray & other): max_size(other.max_size),
-                                                                   data(new Element*[other.max_size]){
+UniqueArray<Element,Compare>:: UniqueArray(const UniqueArray & other):
+                    max_size(other.max_size),data(new Element*[other.max_size]){
 
     for(unsigned int i=0;i<max_size;i++){
         if(other.data[i]) {
@@ -31,7 +32,6 @@ UniqueArray<Element,Compare>:: UniqueArray(const UniqueArray & other): max_size(
 template <class Element, class Compare >
 UniqueArray<Element,Compare>:: ~UniqueArray(){
     for(unsigned int  i=0;i<max_size;i++){
-        //need to check if data[i]!=nullptr?
         delete data[i];
     }
     delete [] data;
@@ -54,7 +54,6 @@ unsigned int UniqueArray<Element,Compare>::  insert(const Element& element){
     UniqueArrayIsFullException fullException;
     throw fullException;
 
-    //exceptions!!!
 }
 
 
@@ -105,7 +104,6 @@ unsigned int UniqueArray<Element,Compare>::  getCount() const{
         if(data[i]!=nullptr){
             count++;
         }
-
     }
     return count;
 }
@@ -128,7 +126,6 @@ UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(const Filter&
             filterd_array.data[i]=nullptr;
         }
     }
-
     return filterd_array;
 
 }
