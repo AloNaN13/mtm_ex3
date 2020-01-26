@@ -123,17 +123,4 @@ UniqueArray<Element,Compare> UniqueArray<Element,Compare>:: filter(
     return filterd_array;
 }
 
-
-
-
-
-
-
-
-
 #endif //EX3_UNIQUEARRAYIMP_H
-
-
-
-
-// change settings in clion for templates

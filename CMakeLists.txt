@@ -26,5 +26,7 @@ add_executable(mtm_ex3
         Time.cpp
         Time.h
         UniqueArray.h
-        UniqueArrayImp.h)
-#Vehicle.h)
+        UniqueArrayImp.h
+        Vehicle.h
+        Vehicle.cpp
+        ParkingLot.cpp)
