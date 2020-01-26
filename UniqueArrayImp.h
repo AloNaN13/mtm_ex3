@@ -39,7 +39,7 @@ unsigned int UniqueArray<Element,Compare>::  insert(const Element& element){
     }
     // element doesn't exists in the UniqueArray
     for(unsigned int i=0;i<max_size;i++){
-        if(data[i]==nullptr) {    //ask
+        if(data[i]==nullptr) {
             data[i]=new Element(element);
             return i;
         }
